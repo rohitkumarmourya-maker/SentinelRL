@@ -1,0 +1,37 @@
+{
+  "environment": {
+    "name": "SentinelEnv",
+    "formulation": "partially observable Markov decision process with approximate belief features",
+    "hosts": 6,
+    "observation_dim": 58,
+    "discrete_actions": 25,
+    "episode_horizon": 48,
+    "response_budget": 6,
+    "attack_base_probability": 0.23,
+    "alert_sensitivity": 0.55,
+    "false_positive_rate": 0.08,
+    "sensitivity_attack_probabilities": [0.18, 0.23, 0.28]
+  },
+  "dqn": {
+    "hidden_layers": [128, 128],
+    "gamma": 0.97,
+    "learning_rate": 0.0007,
+    "batch_size": 64,
+    "replay_capacity": 16000,
+    "learning_starts": 500,
+    "train_every_steps": 4,
+    "target_sync_optimizer_updates": 250,
+    "epsilon_start": 1.0,
+    "epsilon_end": 0.06,
+    "epsilon_decay_steps": 9408,
+    "gradient_norm_clip": 5.0
+  },
+  "experiment": {
+    "training_seeds": [17, 29, 43],
+    "training_episodes_per_seed": 280,
+    "standard_evaluation_episodes_per_baseline": 30,
+    "sensitivity_episodes_per_condition": 20,
+    "standard_evaluation_seed_formula": "300000 + 97*i",
+    "sensitivity_seed_formula": "400000 + 10000*rate_index + 53*i"
+  }
+}

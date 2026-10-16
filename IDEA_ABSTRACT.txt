@@ -1,0 +1,5 @@
+Title: SentinelRL: Budgeted Adaptive Cyber Defence
+
+SentinelRL models enterprise-network defense as a stochastic partially observable Markov decision process (POMDP): attacks spread between vulnerable hosts. A DQN learns when to inspect, isolate, patch, or deploy decoys under a limited response budget, reducing critical-host compromises, delayed detection, unnecessary isolation, and defense costs.
+
+Word count: 44 (whitespace-separated words)
