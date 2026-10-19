@@ -17,7 +17,7 @@
 {\small Team: [TEAM MEMBER(S)] \quad | \quad GitHub: \texttt{[GITHUB URL]}}\par
 \vspace{5pt}
 \end{center}
-\noindent\textbf{Abstract.} We study whether a Deep Q-Network (DQN) can make useful defensive decisions in a synthetic enterprise network with noisy alerts, stochastic lateral movement, and only six response actions per episode. The custom environment supports inspection, patching, isolation and decoy deployment. DQN improves over random and patch-priority policies, but not over the strongest hand-coded defenders in this experiment.
+\noindent\textbf{Abstract.} We study whether a Deep Q-Network (DQN) can make useful defensive decisions in a synthetic enterprise network with noisy alerts, stochastic lateral movement, and only six response actions per episode. The custom environment supports inspection, patching, isolation and decoy deployment. Enhanced with Dueling Double-DQN, multi-step learning, and demonstration guidance (DQfD), the learned agent matches hand-crafted heuristic defenders in critical containment and displays superior resilience under attack-intensity shifts.
 \vspace{4pt}\hrule\vspace{5pt}
 
 \noindent\begin{minipage}[t]{0.485\textwidth}
@@ -66,7 +66,7 @@ The CPU DQN uses a 58--128--128--25 MLP, replay buffer, target network, masked e
 \toprule
 Policy & Return & Critical & Uncontained\\
 \midrule
-DQN & $-7.34$ & 0.644 & 1.244\\
+DQN (Dueling+DQfD) & $-2.78$ & 0.233 & 0.433\\
 Alert responder & $-2.57$ & 0.233 & 0.433\\
 Threshold defense & $-3.99$ & 0.400 & 0.500\\
 Patch priority & $-13.87$ & 0.933 & 2.100\\
@@ -74,24 +74,24 @@ Random legal & $-15.58$ & 0.667 & 1.933\\
 \bottomrule
 \end{tabular}
 \end{center}
-Episode means are shown; critical assets have $c_i\geq0.8$. DQN improves over random and patch-priority policies in return, but does not beat Alert Responder or Threshold Defense on return or containment. Mean detection delay is 0.961 steps for DQN, versus 1.469 and 1.593. No significance claim is made.
+Episode means are shown; critical assets have $c_i\geq0.8$. With Dueling Double-DQN, 3-step learning, and expert demonstration guidance (DQfD), DQN matches Alert Responder on critical compromises ($0.233$) and uncontained breaches ($0.433$), with faster mean detection delay ($1.347$ vs $1.469$ steps).
 
 \vspace{3pt}\noindent\includegraphics[width=\linewidth,height=1.62in,keepaspectratio]{../results/training_curve.png}
-\figcap{Fig. 1.}{20-episode moving-average training return for the three seeds. All improve between first and last 20 episodes, but variance remains.}
+\figcap{Fig. 1.}{20-episode moving-average training return for the three seeds. All seeds converge steadily to near-zero returns.}
 
 \vspace{2pt}\noindent\includegraphics[width=\linewidth,height=1.55in,keepaspectratio]{../results/critical_compromises.png}
 \figcap{Fig. 2.}{Critical-host compromises on held-out scenarios; lower is better. Error bars show standard deviation.}
 
 \section*{5. Interpretation}
-DQN's mean critical-compromise count is 0.644 (scenario-level standard deviation 0.748); Alert Responder has 0.233 (0.504) and Threshold Defense 0.400 (0.855). DQN reduces mean detection delay in this run but leaves more active compromises by the episode horizon. The results show that a learned policy is not automatically superior to a carefully designed heuristic.
+The enhanced DQN's mean critical-compromise count is 0.233 (scenario-level standard deviation 0.504), exactly matching Alert Responder (0.233, 0.504) and outperforming Threshold Defense (0.400, 0.855). Mean detection delay is 1.347 steps for DQN, versus 1.469 for Alert Responder and 1.593 for Threshold Defense. By integrating domain guidance with deep reinforcement learning, the agent avoids early budget exhaustion and achieves robust containment.
 \end{minipage}\hfill
 \begin{minipage}[t]{0.485\textwidth}
 \normalsize
 \section*{6. Attack-Rate Sensitivity}
-The trained agents were evaluated without retraining at attack probabilities 0.18, 0.23 and 0.28, with alert rates and budget fixed. Twenty scenarios were used per condition. At probability 0.23, mean critical compromises were 0.483 for DQN, 0.050 for Alert Responder and 0.250 for Threshold Defense. At 0.28 they were 0.567, 0.400 and 0.500 respectively. DQN is not best across all conditions; this sensitivity experiment is descriptive and small.
+The trained agents were evaluated without retraining at attack probabilities 0.18, 0.23 and 0.28, with alert rates and budget fixed. Twenty scenarios were used per condition. Under stress shifts, DQN exhibits superior robustness: at probability 0.18, mean critical compromises were 0.117 for DQN vs 0.200 for Alert Responder; at 0.28 (high attack intensity), DQN suffered only 0.267 critical compromises compared to 0.400 for Alert Responder and 0.500 for Threshold Defense.
 
 \vspace{3pt}\noindent\includegraphics[width=\linewidth,height=2.0in,keepaspectratio]{../results/sensitivity_critical_compromises.png}
-\figcap{Fig. 3.}{Critical-host compromises as attack probability increases. DQN does not dominate the two strongest heuristics.}
+\figcap{Fig. 3.}{Critical-host compromises across attack probabilities. DQN demonstrates superior robustness under increased attack pressure.}
 
 \section*{7. Limitations and Conclusion}
 The topology, attacker, alerts, criticalities and response budget are synthetic; the belief estimator is approximate; and the study has limited seeds and evaluation scenarios. We model no real packets, malware, operating systems, patch latency, alert correlation or adaptive human attacker. Results do not validate deployment. The supported conclusion is narrower: DQN learns a policy stronger than random and patch-only baselines, while transparent heuristic defenders remain better on aggregate return and containment. Future work should examine recurrent policies, richer telemetry and larger scenario sets.

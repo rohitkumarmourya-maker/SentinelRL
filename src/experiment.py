@@ -8,7 +8,8 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import torch
-from .environment import SentinelEnv, EnvConfig, N_ACTIONS, OBS_DIM
+from .environment import (SentinelEnv, EnvConfig, N_ACTIONS, OBS_DIM, CRITICALITY,
+                          WAIT, INSPECT_BASE, PATCH_BASE, ISOLATE_BASE, DECOY_BASE)
 from .dqn import DQNAgent, DQNConfig
 from .policies import RandomLegalPolicy, PatchPriorityPolicy, AlertResponderPolicy, ThresholdDefensePolicy
 
@@ -19,9 +20,30 @@ RESULTS = ROOT / "results"
 
 def train_one(seed: int, episodes: int, config: DQNConfig | None = None) -> tuple[Path, list[dict]]:
     env_cfg = EnvConfig()
-    agent_cfg = config or DQNConfig(train_every=4, epsilon_decay_steps=max(6000, int(episodes * env_cfg.horizon * 0.70)))
+    agent_cfg = config or DQNConfig(train_every=2, epsilon_decay_steps=max(6000, int(episodes * env_cfg.horizon * 0.70)))
     env = SentinelEnv(seed=seed, config=env_cfg)
     agent = DQNAgent(OBS_DIM, N_ACTIONS, seed=seed, config=agent_cfg, device="cpu")
+    
+    # 1. Collect expert demonstrations to initialize the replay buffer
+    expert = AlertResponderPolicy()
+    for ep in range(35):
+        expert_env = SentinelEnv(seed=seed * 50000 + ep, config=env_cfg)
+        obs, info = expert_env.reset(seed=seed * 50000 + ep)
+        done = False
+        while not done:
+            mask = info["action_mask"]
+            a = expert.act(obs, mask)
+            next_obs, r, term, trunc, next_info = expert_env.step(a)
+            done = term or trunc
+            agent.add_expert(obs, a, r, next_obs, done, next_info["action_mask"])
+            obs, info = next_obs, next_info
+            
+    # 2. Pre-train purely on demonstrations for rapid alignment
+    for _ in range(350):
+        agent.steps += agent_cfg.train_every
+        agent.learn()
+        
+    # 3. Main RL training loop
     rows: list[dict] = []
     for ep in range(episodes):
         obs, info = env.reset(seed=seed * 10000 + ep)
@@ -34,7 +56,21 @@ def train_one(seed: int, episodes: int, config: DQNConfig | None = None) -> tupl
             next_obs, reward, terminated, truncated, next_info = env.step(action)
             done = terminated or truncated
             agent.steps += 1
-            agent.remember(obs, action, reward, next_obs, done, next_info["action_mask"])
+            
+            # Pacing & containment training reward shaping (unaltered true reward logged for return)
+            train_r = reward
+            if action != WAIT and next_obs[54] < 0.5 and next_obs[55] < 0.25:
+                train_r -= 0.3
+            if INSPECT_BASE <= action < PATCH_BASE and next_info["inspected_true"]:
+                train_r -= 0.4
+            if ISOLATE_BASE <= action < DECOY_BASE and next_info["isolated_true"]:
+                host = action - ISOLATE_BASE
+                if CRITICALITY[host] >= 0.8:
+                    train_r += 1.5
+            if done and next_info["active_compromised_at_end"] > 0:
+                train_r -= 1.0 * next_info["critical_compromises_total"]
+
+            agent.remember(obs, action, train_r, next_obs, done, next_info["action_mask"])
             loss = agent.learn()
             if loss is not None: losses.append(loss)
             obs, info = next_obs, next_info
