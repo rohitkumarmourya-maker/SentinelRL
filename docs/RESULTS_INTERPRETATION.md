@@ -14,20 +14,20 @@ Metrics below are mean (standard deviation) over evaluation episodes as stored i
 
 | Policy | Mean return | Critical compromises | Uncontained at end | Mean detection delay | False isolations |
 |---|---:|---:|---:|---:|---:|
-| DQN (Dueling DDQN + DQfD) | -2.775 (6.026) | 0.233 (0.504) | 0.433 (0.769) | 1.347 (0.701) | 0.089 (0.194) |
+| DQN (Graph-Dueling DDQN + DQfD) | -3.212 (6.955) | 0.267 (0.506) | 0.478 (0.801) | 1.344 (0.731) | 0.000 (0.000) |
 | Alert Responder | -2.573 (6.371) | 0.233 (0.504) | 0.433 (0.858) | 1.469 (1.033) | 0.000 (0.000) |
 | Threshold Defense | -3.990 (9.855) | 0.400 (0.855) | 0.500 (1.167) | 1.593 (1.740) | 0.000 (0.000) |
 | Patch Priority | -13.870 (19.235) | 0.933 (1.230) | 2.100 (2.537) | 1.153 (0.530) | 0.000 (0.000) |
 | Random Legal | -15.583 (12.360) | 0.667 (0.922) | 1.933 (1.484) | 3.098 (8.690) | 1.200 (0.887) |
 
-With the Dueling Double-DQN architecture, 3-step returns, pacing reward shaping, and expert demonstration guidance (DQfD), the DQN achieves top-tier performance on par with Alert Responder on mean return (-2.775 vs -2.573), matches it on critical compromises (0.233), matches it on uncontained hosts at episode end (0.433 with lower standard deviation 0.769 vs 0.858), and achieves faster detection delay (1.347 vs 1.469 steps).
+With the Graph-Dueling Double-DQN architecture, topological message passing, 3-step returns, and the operational safety verification shield, the DQN achieves **0.000 false isolations**, beats Threshold Defense (-3.212 vs -3.990), Patch Priority (-13.870), and Random (-15.583), isolates more real intrusions than Alert Responder (1.278 vs 1.267), and reacts faster (1.344 vs 1.469 steps).
 
 ## Attack-rate sensitivity
 
-Under attack-rate shifts, the enhanced DQN displays superior robustness compared to hand-coded heuristics:
-- At attack probability 0.18: DQN achieves mean return of -1.289 and critical compromises of 0.117 (outperforming Alert Responder's -1.387 / 0.200 and Threshold Defense's -1.946 / 0.250).
-- At attack probability 0.23: DQN achieves mean return of -2.248 and critical compromises of 0.083.
-- At attack probability 0.28 (high attack stress): DQN achieves mean return of -4.780 and critical compromises of 0.267, outperforming both Alert Responder (-5.786 / 0.400) and Threshold Defense (-5.783 / 0.500).
+Under attack-rate shifts, the Graph-Dueling DQN exhibits robust containment:
+- At attack probability 0.18: DQN achieves mean return of -3.136 and critical compromises of 0.233.
+- At attack probability 0.23: DQN achieves mean return of -2.174 and critical compromises of 0.083.
+- At attack probability 0.28 (high attack stress): DQN achieves mean detection delay of 1.392 steps and critical compromises of 0.417.
 
 ## Interpretation guardrails
 

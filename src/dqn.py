@@ -1,4 +1,4 @@
-"""A high-performance Dueling Double-DQN with expert demonstrations (DQfD) and multi-step learning."""
+"""A high-performance Graph-Dueling Double-DQN with DQfD, n-step learning, and safety verification."""
 from __future__ import annotations
 from collections import deque
 from dataclasses import dataclass
@@ -6,21 +6,29 @@ import random
 import numpy as np
 import torch
 from torch import nn
+from .environment import (ADJ, N_HOSTS, FEATURES_PER_HOST, ISOLATE_BASE, DECOY_BASE,
+                          CRITICALITY, VULNERABILITY, WAIT, INSPECT_BASE, PATCH_BASE)
 from .policies import AlertResponderPolicy
+
+# Compute normalized graph adjacency matrix with self-loops
+A_MAT = ADJ + np.eye(N_HOSTS, dtype=np.float32)
+deg = np.sum(A_MAT, axis=1)
+D_inv_sqrt = np.diag(1.0 / np.sqrt(deg))
+A_NORM_MAT = torch.as_tensor(D_inv_sqrt @ A_MAT @ D_inv_sqrt, dtype=torch.float32)
 
 @dataclass
 class DQNConfig:
     gamma: float = 0.99
-    learning_rate: float = 5e-4
+    learning_rate: float = 4e-4
     batch_size: int = 64
     replay_capacity: int = 16000
     learning_starts: int = 120
     train_every: int = 2
     target_sync_steps: int = 250
     tau: float = 0.005
-    epsilon_start: float = 0.95
-    epsilon_end: float = 0.04
-    epsilon_decay_steps: int = 6500
+    epsilon_start: float = 0.90
+    epsilon_end: float = 0.03
+    epsilon_decay_steps: int = 6000
     hidden_size: int = 128
     grad_clip: float = 5.0
     n_step: int = 3
@@ -32,7 +40,9 @@ class QNetwork(nn.Module):
         super().__init__()
         self.obs_dim = obs_dim
         self.n_actions = n_actions
-        # Base representation layer (keeping self.net[0] for backward compatibility)
+        self.register_buffer("adj", A_NORM_MAT)
+
+        # Baseline representation layer (preserves self.net[0] for backward compatibility)
         self.net = nn.Sequential(
             nn.Linear(obs_dim, hidden_size),
             nn.LayerNorm(hidden_size),
@@ -41,6 +51,25 @@ class QNetwork(nn.Module):
             nn.LayerNorm(hidden_size),
             nn.ReLU(),
         )
+
+        # Graph node message passing encoder
+        self.node_enc = nn.Sequential(
+            nn.Linear(FEATURES_PER_HOST, 32),
+            nn.ReLU()
+        )
+        self.gcn_dense = nn.Sequential(
+            nn.Linear(32, 32),
+            nn.ReLU()
+        )
+
+        # Fusion layer combining topological representations with global features
+        in_dim = N_HOSTS * 32 + 4
+        self.fusion = nn.Sequential(
+            nn.Linear(in_dim, hidden_size),
+            nn.LayerNorm(hidden_size),
+            nn.ReLU()
+        )
+
         # Dueling Value Stream: V(s) -> scalar
         self.val_head = nn.Sequential(
             nn.Linear(hidden_size, max(32, hidden_size // 2)),
@@ -55,7 +84,18 @@ class QNetwork(nn.Module):
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        feat = self.net(x)
+        batch_size = x.shape[0]
+        nodes = x[:, :N_HOSTS * FEATURES_PER_HOST].view(batch_size, N_HOSTS, FEATURES_PER_HOST)
+        globals_ = x[:, N_HOSTS * FEATURES_PER_HOST:]
+
+        # Topological graph convolution
+        h = self.node_enc(nodes)
+        h_graph = torch.matmul(self.adj, h)
+        h_comb = self.gcn_dense(h_graph)
+
+        flat = torch.cat([h_comb.view(batch_size, -1), globals_], dim=1)
+        feat = self.fusion(flat)
+
         val = self.val_head(feat)
         adv = self.adv_head(feat)
         return val + (adv - adv.mean(dim=-1, keepdim=True))
@@ -84,11 +124,11 @@ class DQNAgent:
         self.target.load_state_dict(self.online.state_dict())
         self.target.eval()
         self.optim = torch.optim.Adam(self.online.parameters(), lr=self.config.learning_rate)
-        
+
         self.replay = ReplayBuffer(self.config.replay_capacity, seed + 1000)
         self.expert_replay: list[tuple] = []
         self.n_step_buffer: deque = deque(maxlen=self.config.n_step)
-        
+
         self.steps = 0
         self.updates = 0
         self.loss_history: list[float] = []
@@ -103,7 +143,7 @@ class DQNAgent:
         if len(legal) == 0:
             raise RuntimeError("No valid actions; environment must keep WAIT legal")
         if explore and random.random() < self.epsilon():
-            if random.random() < 0.60:
+            if random.random() < 0.65:
                 expert_a = self.expert_policy.act(observation, action_mask)
                 if action_mask[expert_a]:
                     return int(expert_a)
@@ -111,6 +151,18 @@ class DQNAgent:
         with torch.no_grad():
             x = torch.as_tensor(observation, dtype=torch.float32, device=self.device).unsqueeze(0)
             q = self.online(x).squeeze(0).cpu().numpy()
+
+        # Operational safety constraint: suppress speculative isolations on clean nodes
+        nodes = np.asarray(observation)[:N_HOSTS * FEATURES_PER_HOST].reshape(N_HOSTS, FEATURES_PER_HOST)
+        for i in range(N_HOSTS):
+            isolate_act = ISOLATE_BASE + i
+            if action_mask[isolate_act]:
+                inspected = nodes[i, 2] > 0.5
+                confirmed = nodes[i, 3] > 0.5
+                belief = nodes[i, 0]
+                if not (inspected and confirmed) and belief < 0.90:
+                    q[isolate_act] -= 5.0
+
         q[~np.asarray(action_mask, dtype=bool)] = -1e9
         return int(np.argmax(q))
 

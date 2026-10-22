@@ -62,11 +62,13 @@ def train_one(seed: int, episodes: int, config: DQNConfig | None = None) -> tupl
             if action != WAIT and next_obs[54] < 0.5 and next_obs[55] < 0.25:
                 train_r -= 0.3
             if INSPECT_BASE <= action < PATCH_BASE and next_info["inspected_true"]:
-                train_r -= 0.4
+                train_r -= 0.3
             if ISOLATE_BASE <= action < DECOY_BASE and next_info["isolated_true"]:
                 host = action - ISOLATE_BASE
                 if CRITICALITY[host] >= 0.8:
                     train_r += 1.5
+            if ISOLATE_BASE <= action < DECOY_BASE and next_info["isolated_false"]:
+                train_r -= 2.5
             if done and next_info["active_compromised_at_end"] > 0:
                 train_r -= 1.0 * next_info["critical_compromises_total"]
 
