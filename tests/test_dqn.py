@@ -1,7 +1,13 @@
 import numpy as np
-import torch
+
+try:
+    import torch
+except ImportError:
+    from src._torch_compat import torch  # type: ignore
+
 from src.dqn import DQNAgent, DQNConfig
-from src.environment import SentinelEnv, OBS_DIM, N_ACTIONS
+from src.environment import SentinelEnv, OBS_DIM, N_ACTIONS, ISOLATE_BASE, INSPECT_BASE
+from src.policies import TabularQLearningAgent, AlertResponderPolicy
 
 
 def test_masking_and_checkpoint_round_trip(tmp_path):
@@ -36,3 +42,25 @@ def test_training_update_returns_finite_loss():
         agent.remember(obs, i % N_ACTIONS, 0.5, next_obs, False, mask)
     loss = agent.learn()
     assert loss is not None and np.isfinite(loss)
+
+
+def test_safety_shield_blocks_unverified_isolation():
+    agent = DQNAgent(OBS_DIM, N_ACTIONS, seed=7)
+    env = SentinelEnv(seed=7)
+    obs, info = env.reset(seed=7)
+    mask = info["action_mask"]
+    chosen = agent.act(obs, mask, explore=False)
+    # At t=0 before inspection, no host is confirmed and max belief is 0.22 (<0.70), so agent inspects rather than falsely isolating
+    assert INSPECT_BASE <= chosen < INSPECT_BASE + 6
+    assert not (ISOLATE_BASE <= chosen < ISOLATE_BASE + 6)
+
+
+def test_tabular_q_learning_updates_and_masks():
+    tab = TabularQLearningAgent(seed=11)
+    env = SentinelEnv(seed=11)
+    obs, info = env.reset(seed=11)
+    a = tab.act(obs, info["action_mask"], epsilon=0.0)
+    assert info["action_mask"][a]
+    n_obs, r, term, trunc, n_info = env.step(a)
+    tab.update(obs, a, r, n_obs, term or trunc, n_info["action_mask"])
+    assert len(tab.q_table) >= 1
