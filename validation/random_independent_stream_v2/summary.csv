@@ -1,0 +1,2 @@
+policy,model_seeds,scenarios,return_mean,total_compromises_mean,critical_compromises_mean,uncontained_at_end_mean,false_isolations_mean,successful_isolations_mean,action_costs_mean,invalid_actions_mean,confirmed_fraction_mean,censored_confirmation_delay_mean
+original_random,1,200,-27.798142676439884,3.05,1.035,2.6,1.14,0.45,6.0,0.0,0.14483333333333331,35.41791666666667

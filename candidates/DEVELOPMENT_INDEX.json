@@ -1,0 +1,1417 @@
+[
+  {
+    "name": "belief_context_n3_v7",
+    "created_utc": "2026-10-26T11:59:08.268725+00:00",
+    "status": "SPLIT_ASSIGNED_SUBSET_COMPLETE",
+    "training_seeds": [
+      101,
+      202
+    ],
+    "training_episodes": 20000,
+    "config": {
+      "gamma": 1.0,
+      "representation": "sufficient",
+      "architecture": "contextual_host",
+      "learning_rate": 0.0003,
+      "batch_size": 128,
+      "replay_capacity": 30000,
+      "learning_starts": 1000,
+      "train_every": 1,
+      "target_sync_updates": 500,
+      "epsilon_start": 1.0,
+      "epsilon_end": 0.02,
+      "epsilon_decay_steps": 240000,
+      "hidden_size": 128,
+      "n_step": 3,
+      "grad_clip": 10.0,
+      "huber_beta": 5.0,
+      "td_loss": "huber",
+      "prioritized_replay": false,
+      "priority_alpha": 0.6,
+      "importance_beta": 0.4,
+      "importance_anneal_updates": 200000,
+      "compress_forced_wait": true
+    },
+    "environment": {
+      "horizon": 48,
+      "response_budget": 6,
+      "attack_base_probability": 0.23,
+      "alert_sensitivity": 0.55,
+      "false_positive_rate": 0.08,
+      "patch_multiplier": 0.2,
+      "decoy_multiplier": 0.25,
+      "alert_ema_alpha": 0.35
+    },
+    "source_sha256": {
+      "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+      "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+      "src/champion.py": "dbf8c7c2b9c312660d0214a796709d9c3f0dbaca6b2d6ff37c1aeb494708c92f",
+      "train_candidate.py": "2fa80c3a02107b88a6db7816165ec3c462333681c469ef8d18795fa91ae951b1"
+    },
+    "python": "3.12.5",
+    "torch": "2.8.0",
+    "numpy": "2.2.6",
+    "device": "cpu",
+    "training_scenario_rule": "1000000 * training_seed + episode_index",
+    "validation_scenario_rule": "600000 + 101 * scenario_index",
+    "validation_scenarios": 200,
+    "test_scenarios_used": false,
+    "forced_wait_compression": "actual suffix rewards folded into prior transition with duration discount",
+    "original_planned_training_seeds": [
+      101,
+      202
+    ],
+    "actual_completed_training_seeds": [
+      101
+    ],
+    "assigned_training_seeds": [
+      101
+    ],
+    "delegated_training_seeds": {
+      "202": "belief_context_n3_v7_seed202"
+    },
+    "family_manifest": "candidates/belief_context_n3_v7_family.json",
+    "coordinated_stop": "Stopped only after load/hash/config/source verification of complete seed10120000-episode checkpoint; final validation rerun from that frozen checkpoint.",
+    "redundant_seed202_work": [],
+    "seed101_environment_steps": 960000,
+    "seed101_gradient_updates": 380853,
+    "seed101_checkpoint_sha256": "ee33e8eb5a18ef78af4ce72fc21fc381e516d604cf53ab5216fba76b20c4a9c4",
+    "seed101_logged_elapsed_seconds": 1240.9717252500013,
+    "validation_means": [
+      {
+        "episodes": 2000,
+        "seeds": [
+          101
+        ],
+        "return": -3.096966493546962,
+        "total_compromises": 1.115,
+        "critical_compromises": 0.095,
+        "uncontained_at_end": 0.065,
+        "false_isolations": 0.52,
+        "successful_isolations": 1.05,
+        "action_costs": 5.98,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.2875,
+        "censored_confirmation_delay": 34.41625
+      },
+      {
+        "episodes": 5000,
+        "seeds": [
+          101
+        ],
+        "return": -4.331804488793015,
+        "total_compromises": 1.31,
+        "critical_compromises": 0.195,
+        "uncontained_at_end": 0.205,
+        "false_isolations": 0.18,
+        "successful_isolations": 1.105,
+        "action_costs": 6.0,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.15608333333333335,
+        "censored_confirmation_delay": 40.2435
+      },
+      {
+        "episodes": 10000,
+        "seeds": [
+          101
+        ],
+        "return": -3.0708899745762337,
+        "total_compromises": 1.275,
+        "critical_compromises": 0.09,
+        "uncontained_at_end": 0.145,
+        "false_isolations": 0.165,
+        "successful_isolations": 1.13,
+        "action_costs": 3.86,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.16058333333333333,
+        "censored_confirmation_delay": 39.89
+      },
+      {
+        "episodes": 20000,
+        "seeds": [
+          101
+        ],
+        "return": -2.2232794765502217,
+        "total_compromises": 1.215,
+        "critical_compromises": 0.09,
+        "uncontained_at_end": 0.065,
+        "false_isolations": 0.175,
+        "successful_isolations": 1.15,
+        "action_costs": 2.745,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.16958333333333336,
+        "censored_confirmation_delay": 39.78541666666666
+      }
+    ]
+  },
+  {
+    "name": "belief_context_n3_v7_seed202",
+    "created_utc": "2026-10-26T12:04:49.322128+00:00",
+    "status": "COMPLETE",
+    "training_seeds": [
+      202
+    ],
+    "training_episodes": 20000,
+    "config": {
+      "gamma": 1.0,
+      "representation": "sufficient",
+      "architecture": "contextual_host",
+      "learning_rate": 0.0003,
+      "batch_size": 128,
+      "replay_capacity": 30000,
+      "learning_starts": 1000,
+      "train_every": 1,
+      "target_sync_updates": 500,
+      "epsilon_start": 1.0,
+      "epsilon_end": 0.02,
+      "epsilon_decay_steps": 240000,
+      "hidden_size": 128,
+      "n_step": 3,
+      "grad_clip": 10.0,
+      "huber_beta": 5.0,
+      "td_loss": "huber",
+      "prioritized_replay": false,
+      "priority_alpha": 0.6,
+      "importance_beta": 0.4,
+      "importance_anneal_updates": 200000,
+      "compress_forced_wait": true
+    },
+    "environment": {
+      "horizon": 48,
+      "response_budget": 6,
+      "attack_base_probability": 0.23,
+      "alert_sensitivity": 0.55,
+      "false_positive_rate": 0.08,
+      "patch_multiplier": 0.2,
+      "decoy_multiplier": 0.25,
+      "alert_ema_alpha": 0.35
+    },
+    "source_sha256": {
+      "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+      "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+      "src/champion.py": "dbf8c7c2b9c312660d0214a796709d9c3f0dbaca6b2d6ff37c1aeb494708c92f",
+      "train_candidate.py": "2fa80c3a02107b88a6db7816165ec3c462333681c469ef8d18795fa91ae951b1"
+    },
+    "python": "3.12.5",
+    "torch": "2.8.0",
+    "numpy": "2.2.6",
+    "device": "cpu",
+    "training_scenario_rule": "1000000 * training_seed + episode_index",
+    "validation_scenario_rule": "600000 + 101 * scenario_index",
+    "validation_scenarios": 200,
+    "test_scenarios_used": false,
+    "forced_wait_compression": "actual suffix rewards folded into prior transition with duration discount",
+    "elapsed_seconds": 1349.5146844170013,
+    "seed_elapsed_seconds": {
+      "202": 1349.250607375001
+    },
+    "validation_means": [
+      {
+        "episodes": 2000,
+        "seeds": [
+          202
+        ],
+        "return": -3.328834479895233,
+        "total_compromises": 1.215,
+        "critical_compromises": 0.15,
+        "uncontained_at_end": 0.105,
+        "false_isolations": 0.14,
+        "successful_isolations": 1.11,
+        "action_costs": 5.975,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.06666666666666667,
+        "censored_confirmation_delay": 44.74075
+      },
+      {
+        "episodes": 5000,
+        "seeds": [
+          202
+        ],
+        "return": -4.659263459771871,
+        "total_compromises": 1.335,
+        "critical_compromises": 0.19,
+        "uncontained_at_end": 0.24,
+        "false_isolations": 0.165,
+        "successful_isolations": 1.095,
+        "action_costs": 6.0,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.04016666666666666,
+        "censored_confirmation_delay": 45.68908333333333
+      },
+      {
+        "episodes": 10000,
+        "seeds": [
+          202
+        ],
+        "return": -2.5645839788854117,
+        "total_compromises": 1.2,
+        "critical_compromises": 0.12,
+        "uncontained_at_end": 0.07,
+        "false_isolations": 0.17,
+        "successful_isolations": 1.13,
+        "action_costs": 4.255,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.22325,
+        "censored_confirmation_delay": 37.35916666666666
+      },
+      {
+        "episodes": 20000,
+        "seeds": [
+          202
+        ],
+        "return": -2.9068809849500643,
+        "total_compromises": 1.225,
+        "critical_compromises": 0.135,
+        "uncontained_at_end": 0.125,
+        "false_isolations": 0.145,
+        "successful_isolations": 1.1,
+        "action_costs": 4.305,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.10416666666666669,
+        "censored_confirmation_delay": 42.75216666666666
+      }
+    ]
+  },
+  {
+    "name": "belief_dueling_n1_v2",
+    "created_utc": "2026-10-26T11:33:34.059694+00:00",
+    "status": "PRUNED",
+    "training_seeds": [
+      101,
+      202
+    ],
+    "training_episodes": 20000,
+    "config": {
+      "gamma": 1.0,
+      "learning_rate": 0.0003,
+      "batch_size": 128,
+      "replay_capacity": 50000,
+      "learning_starts": 1000,
+      "train_every": 1,
+      "target_sync_updates": 500,
+      "epsilon_start": 1.0,
+      "epsilon_end": 0.02,
+      "epsilon_decay_steps": 240000,
+      "hidden_size": 256,
+      "n_step": 1,
+      "grad_clip": 10.0,
+      "huber_beta": 5.0,
+      "compress_forced_wait": true
+    },
+    "environment": {
+      "horizon": 48,
+      "response_budget": 6,
+      "attack_base_probability": 0.23,
+      "alert_sensitivity": 0.55,
+      "false_positive_rate": 0.08,
+      "patch_multiplier": 0.2,
+      "decoy_multiplier": 0.25,
+      "alert_ema_alpha": 0.35
+    },
+    "source_sha256": {
+      "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+      "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+      "src/champion.py": "a2c6feadfb7ebfec85384e1c5c7e0524e60092a2663f13e99a9637d7542a1aac",
+      "train_candidate.py": "31cac8e569b2f737c8b8c4e4d3740cf3b8775e5d7ead88c57e75ba3c5dfa7333"
+    },
+    "python": "3.12.5",
+    "torch": "2.8.0",
+    "numpy": "2.2.6",
+    "device": "cpu",
+    "training_scenario_rule": "1000000 * training_seed + episode_index",
+    "validation_scenario_rule": "600000 + 101 * scenario_index",
+    "validation_scenarios": 200,
+    "test_scenarios_used": false,
+    "forced_wait_compression": "actual suffix rewards folded into prior transition with duration discount",
+    "pruning_reason": "MLP one-step candidate failed to match shared-host three-step variants: second-seed 10000-episode validation return -6.8977 and first-seed 20000-episode result preserved. Freed this process slot for a standard importance-corrected PER candidate addressing late-WAIT replay imbalance.",
+    "actual_completed_logged_episodes": {
+      "101": 20000,
+      "202": 11500
+    },
+    "actual_completed_checkpoint_episodes": {
+      "101": [
+        2000,
+        5000,
+        10000,
+        20000
+      ],
+      "202": [
+        2000,
+        5000,
+        10000
+      ]
+    },
+    "validation_means": [
+      {
+        "episodes": 2000,
+        "seeds": [
+          101,
+          202
+        ],
+        "return": -9.52097440674156,
+        "total_compromises": 1.775,
+        "critical_compromises": 0.4475,
+        "uncontained_at_end": 0.84,
+        "false_isolations": 0.2525,
+        "successful_isolations": 0.935,
+        "action_costs": 5.6175,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.2781666666666667,
+        "censored_confirmation_delay": 32.44595833333333
+      },
+      {
+        "episodes": 5000,
+        "seeds": [
+          101,
+          202
+        ],
+        "return": -6.33856545612663,
+        "total_compromises": 1.5225,
+        "critical_compromises": 0.2825,
+        "uncontained_at_end": 0.395,
+        "false_isolations": 0.18,
+        "successful_isolations": 1.1275,
+        "action_costs": 5.37,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.31795833333333334,
+        "censored_confirmation_delay": 32.40275
+      },
+      {
+        "episodes": 10000,
+        "seeds": [
+          101,
+          202
+        ],
+        "return": -5.193330462467671,
+        "total_compromises": 1.4500000000000002,
+        "critical_compromises": 0.21000000000000002,
+        "uncontained_at_end": 0.2775,
+        "false_isolations": 0.1875,
+        "successful_isolations": 1.1724999999999999,
+        "action_costs": 5.3975,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.11470833333333333,
+        "censored_confirmation_delay": 41.80204166666667
+      },
+      {
+        "episodes": 20000,
+        "seeds": [
+          101
+        ],
+        "return": -3.8783484695911388,
+        "total_compromises": 1.32,
+        "critical_compromises": 0.18,
+        "uncontained_at_end": 0.185,
+        "false_isolations": 0.135,
+        "successful_isolations": 1.135,
+        "action_costs": 4.495,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.22591666666666668,
+        "censored_confirmation_delay": 37.012750000000004
+      }
+    ]
+  },
+  {
+    "name": "belief_dueling_n3_v1",
+    "created_utc": "2026-10-26T11:31:22.005559+00:00",
+    "status": "COMPLETE",
+    "training_seeds": [
+      101,
+      202
+    ],
+    "training_episodes": 20000,
+    "config": {
+      "gamma": 1.0,
+      "learning_rate": 0.0005,
+      "batch_size": 128,
+      "replay_capacity": 100000,
+      "learning_starts": 1000,
+      "train_every": 1,
+      "target_sync_updates": 500,
+      "epsilon_start": 1.0,
+      "epsilon_end": 0.02,
+      "epsilon_decay_steps": 300000,
+      "hidden_size": 256,
+      "n_step": 3,
+      "grad_clip": 10.0,
+      "huber_beta": 5.0,
+      "compress_forced_wait": true
+    },
+    "environment": {
+      "horizon": 48,
+      "response_budget": 6,
+      "attack_base_probability": 0.23,
+      "alert_sensitivity": 0.55,
+      "false_positive_rate": 0.08,
+      "patch_multiplier": 0.2,
+      "decoy_multiplier": 0.25,
+      "alert_ema_alpha": 0.35
+    },
+    "source_sha256": {
+      "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+      "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+      "src/champion.py": "a2c6feadfb7ebfec85384e1c5c7e0524e60092a2663f13e99a9637d7542a1aac",
+      "train_candidate.py": "31cac8e569b2f737c8b8c4e4d3740cf3b8775e5d7ead88c57e75ba3c5dfa7333"
+    },
+    "python": "3.12.5",
+    "torch": "2.8.0",
+    "numpy": "2.2.6",
+    "device": "cpu",
+    "training_scenario_rule": "1000000 * training_seed + episode_index",
+    "validation_scenario_rule": "600000 + 101 * scenario_index",
+    "validation_scenarios": 200,
+    "test_scenarios_used": false,
+    "forced_wait_compression": "actual suffix rewards folded into prior transition with duration discount",
+    "elapsed_seconds": 226.35342924999895,
+    "validation_means": [
+      {
+        "episodes": 2000,
+        "seeds": [
+          101,
+          202
+        ],
+        "return": -4.570983485604822,
+        "total_compromises": 1.2575,
+        "critical_compromises": 0.1325,
+        "uncontained_at_end": 0.145,
+        "false_isolations": 0.675,
+        "successful_isolations": 1.1125,
+        "action_costs": 6.0,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.042666666666666665,
+        "censored_confirmation_delay": 45.619166666666665
+      },
+      {
+        "episodes": 5000,
+        "seeds": [
+          101,
+          202
+        ],
+        "return": -4.5978699873209,
+        "total_compromises": 1.3025,
+        "critical_compromises": 0.15000000000000002,
+        "uncontained_at_end": 0.1775,
+        "false_isolations": 0.4225,
+        "successful_isolations": 1.125,
+        "action_costs": 6.0,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.07279166666666667,
+        "censored_confirmation_delay": 44.23991666666667
+      },
+      {
+        "episodes": 10000,
+        "seeds": [
+          101,
+          202
+        ],
+        "return": -4.711476472634075,
+        "total_compromises": 1.33,
+        "critical_compromises": 0.16499999999999998,
+        "uncontained_at_end": 0.20500000000000002,
+        "false_isolations": 0.34750000000000003,
+        "successful_isolations": 1.125,
+        "action_costs": 6.0,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.06579166666666666,
+        "censored_confirmation_delay": 44.55533333333334
+      },
+      {
+        "episodes": 20000,
+        "seeds": [
+          101,
+          202
+        ],
+        "return": -4.261630476886033,
+        "total_compromises": 1.3325,
+        "critical_compromises": 0.16749999999999998,
+        "uncontained_at_end": 0.1725,
+        "false_isolations": 0.23249999999999998,
+        "successful_isolations": 1.1600000000000001,
+        "action_costs": 5.9975000000000005,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.12604166666666666,
+        "censored_confirmation_delay": 41.6005
+      }
+    ]
+  },
+  {
+    "name": "belief_n3_smoke",
+    "created_utc": "2026-10-26T11:31:04.559619+00:00",
+    "status": "COMPLETE",
+    "training_seeds": [
+      101
+    ],
+    "training_episodes": 10,
+    "config": {
+      "gamma": 1.0,
+      "learning_rate": 0.0005,
+      "batch_size": 128,
+      "replay_capacity": 100000,
+      "learning_starts": 1000,
+      "train_every": 1,
+      "target_sync_updates": 500,
+      "epsilon_start": 1.0,
+      "epsilon_end": 0.02,
+      "epsilon_decay_steps": 300000,
+      "hidden_size": 128,
+      "n_step": 3,
+      "grad_clip": 10.0,
+      "huber_beta": 5.0,
+      "compress_forced_wait": true
+    },
+    "environment": {
+      "horizon": 48,
+      "response_budget": 6,
+      "attack_base_probability": 0.23,
+      "alert_sensitivity": 0.55,
+      "false_positive_rate": 0.08,
+      "patch_multiplier": 0.2,
+      "decoy_multiplier": 0.25,
+      "alert_ema_alpha": 0.35
+    },
+    "source_sha256": {
+      "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+      "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+      "src/champion.py": "a2c6feadfb7ebfec85384e1c5c7e0524e60092a2663f13e99a9637d7542a1aac",
+      "train_candidate.py": "31cac8e569b2f737c8b8c4e4d3740cf3b8775e5d7ead88c57e75ba3c5dfa7333"
+    },
+    "python": "3.12.5",
+    "torch": "2.8.0",
+    "numpy": "2.2.6",
+    "device": "cpu",
+    "training_scenario_rule": "1000000 * training_seed + episode_index",
+    "validation_scenario_rule": "600000 + 101 * scenario_index",
+    "validation_scenarios": 10,
+    "test_scenarios_used": false,
+    "forced_wait_compression": "actual suffix rewards folded into prior transition with duration discount",
+    "elapsed_seconds": 0.046064292000664864,
+    "validation_means": [
+      {
+        "episodes": 10,
+        "seeds": [
+          101
+        ],
+        "return": -10.859599896430971,
+        "total_compromises": 1.3,
+        "critical_compromises": 0.3,
+        "uncontained_at_end": 1.3,
+        "false_isolations": 1.0,
+        "successful_isolations": 0.0,
+        "action_costs": 6.0,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.9,
+        "censored_confirmation_delay": 5.35
+      }
+    ]
+  },
+  {
+    "name": "belief_shared_n1_v3",
+    "created_utc": "2026-10-26T11:35:16.970451+00:00",
+    "status": "PRUNED",
+    "training_seeds": [
+      101,
+      202
+    ],
+    "training_episodes": 20000,
+    "config": {
+      "gamma": 1.0,
+      "representation": "sufficient",
+      "architecture": "shared_host",
+      "learning_rate": 0.0003,
+      "batch_size": 128,
+      "replay_capacity": 50000,
+      "learning_starts": 1000,
+      "train_every": 1,
+      "target_sync_updates": 500,
+      "epsilon_start": 1.0,
+      "epsilon_end": 0.02,
+      "epsilon_decay_steps": 240000,
+      "hidden_size": 128,
+      "n_step": 1,
+      "grad_clip": 10.0,
+      "huber_beta": 5.0,
+      "compress_forced_wait": true
+    },
+    "environment": {
+      "horizon": 48,
+      "response_budget": 6,
+      "attack_base_probability": 0.23,
+      "alert_sensitivity": 0.55,
+      "false_positive_rate": 0.08,
+      "patch_multiplier": 0.2,
+      "decoy_multiplier": 0.25,
+      "alert_ema_alpha": 0.35
+    },
+    "source_sha256": {
+      "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+      "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+      "src/champion.py": "41fdaa3e65a967009a1fd5412ab6c574643d93033884631fdc58eb7585321cb1",
+      "train_candidate.py": "31cac8e569b2f737c8b8c4e4d3740cf3b8775e5d7ead88c57e75ba3c5dfa7333"
+    },
+    "python": "3.12.5",
+    "torch": "2.8.0",
+    "numpy": "2.2.6",
+    "device": "cpu",
+    "training_scenario_rule": "1000000 * training_seed + episode_index",
+    "validation_scenario_rule": "600000 + 101 * scenario_index",
+    "validation_scenarios": 200,
+    "test_scenarios_used": false,
+    "forced_wait_compression": "actual suffix rewards folded into prior transition with duration discount",
+    "pruning_reason": "Shared one-step value propagation was materially weaker than shared three-step at the common 5000-episode validation checkpoint; a squared-TD-loss candidate addresses the judge-identified expected-return risk under heavy-tailed costs.",
+    "actual_completed_logged_episodes": {
+      "101": 7000
+    },
+    "actual_completed_checkpoint_episodes": {
+      "101": [
+        2000,
+        5000
+      ]
+    },
+    "unstarted_training_seeds": [
+      202
+    ],
+    "validation_means": [
+      {
+        "episodes": 2000,
+        "seeds": [
+          101
+        ],
+        "return": -22.897545840820673,
+        "total_compromises": 3.335,
+        "critical_compromises": 1.105,
+        "uncontained_at_end": 1.79,
+        "false_isolations": 0.28,
+        "successful_isolations": 1.545,
+        "action_costs": 1.825,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.0,
+        "censored_confirmation_delay": 43.68683333333333
+      },
+      {
+        "episodes": 5000,
+        "seeds": [
+          101
+        ],
+        "return": -4.566928985664248,
+        "total_compromises": 1.385,
+        "critical_compromises": 0.175,
+        "uncontained_at_end": 0.135,
+        "false_isolations": 0.43,
+        "successful_isolations": 1.25,
+        "action_costs": 6.0,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.2330833333333333,
+        "censored_confirmation_delay": 37.32266666666667
+      }
+    ]
+  },
+  {
+    "name": "belief_shared_n3_mse_per_v6",
+    "created_utc": "2026-10-26T11:46:33.683033+00:00",
+    "status": "PRUNED",
+    "training_seeds": [
+      101,
+      202
+    ],
+    "training_episodes": 20000,
+    "config": {
+      "gamma": 1.0,
+      "representation": "sufficient",
+      "architecture": "shared_host",
+      "learning_rate": 0.0003,
+      "batch_size": 128,
+      "replay_capacity": 30000,
+      "learning_starts": 1000,
+      "train_every": 1,
+      "target_sync_updates": 500,
+      "epsilon_start": 1.0,
+      "epsilon_end": 0.02,
+      "epsilon_decay_steps": 240000,
+      "hidden_size": 128,
+      "n_step": 3,
+      "grad_clip": 10.0,
+      "huber_beta": 5.0,
+      "td_loss": "mse",
+      "prioritized_replay": true,
+      "priority_alpha": 0.6,
+      "importance_beta": 0.4,
+      "importance_anneal_updates": 200000,
+      "compress_forced_wait": true
+    },
+    "environment": {
+      "horizon": 48,
+      "response_budget": 6,
+      "attack_base_probability": 0.23,
+      "alert_sensitivity": 0.55,
+      "false_positive_rate": 0.08,
+      "patch_multiplier": 0.2,
+      "decoy_multiplier": 0.25,
+      "alert_ema_alpha": 0.35
+    },
+    "source_sha256": {
+      "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+      "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+      "src/champion.py": "a49881d61c5171cf215370888f8fe649f369e8a598bf12fc316ff56407a1933f",
+      "train_candidate.py": "31cac8e569b2f737c8b8c4e4d3740cf3b8775e5d7ead88c57e75ba3c5dfa7333"
+    },
+    "python": "3.12.5",
+    "torch": "2.8.0",
+    "numpy": "2.2.6",
+    "device": "cpu",
+    "training_scenario_rule": "1000000 * training_seed + episode_index",
+    "validation_scenario_rule": "600000 + 101 * scenario_index",
+    "validation_scenarios": 200,
+    "test_scenarios_used": false,
+    "forced_wait_compression": "actual suffix rewards folded into prior transition with duration discount",
+    "pruning_reason": "Successive-halving screen: common seed101 at10000episodes PER mean return -3.54346 versus uniform replay MSE -2.29686 and Huber -3.19947, with larger false-isolation burden. Preserved all checkpoints and validation rows; freed slot for original-architecture comparator.",
+    "actual_completed_logged_episodes": {
+      "101": 10500
+    },
+    "actual_completed_checkpoint_episodes": {
+      "101": [
+        2000,
+        5000,
+        10000
+      ]
+    },
+    "unstarted_training_seeds": [
+      202
+    ],
+    "validation_means": [
+      {
+        "episodes": 2000,
+        "seeds": [
+          101
+        ],
+        "return": -6.589360079190132,
+        "total_compromises": 1.06,
+        "critical_compromises": 0.05,
+        "uncontained_at_end": 0.005,
+        "false_isolations": 2.295,
+        "successful_isolations": 1.055,
+        "action_costs": 6.0,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.0,
+        "censored_confirmation_delay": 47.96625
+      },
+      {
+        "episodes": 5000,
+        "seeds": [
+          101
+        ],
+        "return": -4.388154494553804,
+        "total_compromises": 1.155,
+        "critical_compromises": 0.095,
+        "uncontained_at_end": 0.08,
+        "false_isolations": 0.965,
+        "successful_isolations": 1.075,
+        "action_costs": 6.0,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.021,
+        "censored_confirmation_delay": 46.79183333333334
+      },
+      {
+        "episodes": 10000,
+        "seeds": [
+          101
+        ],
+        "return": -3.543459492492675,
+        "total_compromises": 1.24,
+        "critical_compromises": 0.11,
+        "uncontained_at_end": 0.045,
+        "false_isolations": 0.485,
+        "successful_isolations": 1.195,
+        "action_costs": 5.91,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.26016666666666666,
+        "censored_confirmation_delay": 35.86741666666667
+      }
+    ]
+  },
+  {
+    "name": "belief_shared_n3_mse_v5",
+    "created_utc": "2026-10-26T11:39:43.880941+00:00",
+    "status": "COMPLETE",
+    "training_seeds": [
+      101,
+      202
+    ],
+    "training_episodes": 20000,
+    "config": {
+      "gamma": 1.0,
+      "representation": "sufficient",
+      "architecture": "shared_host",
+      "learning_rate": 0.0003,
+      "batch_size": 128,
+      "replay_capacity": 30000,
+      "learning_starts": 1000,
+      "train_every": 1,
+      "target_sync_updates": 500,
+      "epsilon_start": 1.0,
+      "epsilon_end": 0.02,
+      "epsilon_decay_steps": 240000,
+      "hidden_size": 128,
+      "n_step": 3,
+      "grad_clip": 10.0,
+      "huber_beta": 5.0,
+      "td_loss": "mse",
+      "compress_forced_wait": true
+    },
+    "environment": {
+      "horizon": 48,
+      "response_budget": 6,
+      "attack_base_probability": 0.23,
+      "alert_sensitivity": 0.55,
+      "false_positive_rate": 0.08,
+      "patch_multiplier": 0.2,
+      "decoy_multiplier": 0.25,
+      "alert_ema_alpha": 0.35
+    },
+    "source_sha256": {
+      "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+      "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+      "src/champion.py": "014a875fbecd4f758ea62a3e6b019bdca3e42f0458b2a94ef9f6fd9e20854987",
+      "train_candidate.py": "31cac8e569b2f737c8b8c4e4d3740cf3b8775e5d7ead88c57e75ba3c5dfa7333"
+    },
+    "python": "3.12.5",
+    "torch": "2.8.0",
+    "numpy": "2.2.6",
+    "device": "cpu",
+    "training_scenario_rule": "1000000 * training_seed + episode_index",
+    "validation_scenario_rule": "600000 + 101 * scenario_index",
+    "validation_scenarios": 200,
+    "test_scenarios_used": false,
+    "forced_wait_compression": "actual suffix rewards folded into prior transition with duration discount",
+    "elapsed_seconds": 613.7581166660002,
+    "validation_means": [
+      {
+        "episodes": 2000,
+        "seeds": [
+          101,
+          202
+        ],
+        "return": -5.4651530314907415,
+        "total_compromises": 1.0925,
+        "critical_compromises": 0.035,
+        "uncontained_at_end": 0.025,
+        "false_isolations": 1.7375,
+        "successful_isolations": 1.0675,
+        "action_costs": 6.0,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.0,
+        "censored_confirmation_delay": 47.9
+      },
+      {
+        "episodes": 5000,
+        "seeds": [
+          101,
+          202
+        ],
+        "return": -3.1161864879488936,
+        "total_compromises": 1.115,
+        "critical_compromises": 0.065,
+        "uncontained_at_end": 0.052500000000000005,
+        "false_isolations": 0.7125,
+        "successful_isolations": 1.0625,
+        "action_costs": 4.745,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.28883333333333333,
+        "censored_confirmation_delay": 34.471374999999995
+      },
+      {
+        "episodes": 10000,
+        "seeds": [
+          101,
+          202
+        ],
+        "return": -2.647902736975253,
+        "total_compromises": 1.2325,
+        "critical_compromises": 0.1,
+        "uncontained_at_end": 0.05,
+        "false_isolations": 0.175,
+        "successful_isolations": 1.1825,
+        "action_costs": 5.11,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.3770833333333333,
+        "censored_confirmation_delay": 29.893583333333336
+      },
+      {
+        "episodes": 20000,
+        "seeds": [
+          101,
+          202
+        ],
+        "return": -2.7224412257373327,
+        "total_compromises": 1.225,
+        "critical_compromises": 0.11000000000000001,
+        "uncontained_at_end": 0.0875,
+        "false_isolations": 0.23249999999999998,
+        "successful_isolations": 1.1375,
+        "action_costs": 3.29,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.169875,
+        "censored_confirmation_delay": 39.953541666666666
+      }
+    ]
+  },
+  {
+    "name": "belief_shared_n3_v4",
+    "created_utc": "2026-10-26T11:35:58.306946+00:00",
+    "status": "COMPLETE",
+    "training_seeds": [
+      101,
+      202
+    ],
+    "training_episodes": 20000,
+    "config": {
+      "gamma": 1.0,
+      "representation": "sufficient",
+      "architecture": "shared_host",
+      "learning_rate": 0.0003,
+      "batch_size": 128,
+      "replay_capacity": 30000,
+      "learning_starts": 1000,
+      "train_every": 1,
+      "target_sync_updates": 500,
+      "epsilon_start": 1.0,
+      "epsilon_end": 0.02,
+      "epsilon_decay_steps": 240000,
+      "hidden_size": 128,
+      "n_step": 3,
+      "grad_clip": 10.0,
+      "huber_beta": 5.0,
+      "compress_forced_wait": true
+    },
+    "environment": {
+      "horizon": 48,
+      "response_budget": 6,
+      "attack_base_probability": 0.23,
+      "alert_sensitivity": 0.55,
+      "false_positive_rate": 0.08,
+      "patch_multiplier": 0.2,
+      "decoy_multiplier": 0.25,
+      "alert_ema_alpha": 0.35
+    },
+    "source_sha256": {
+      "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+      "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+      "src/champion.py": "41fdaa3e65a967009a1fd5412ab6c574643d93033884631fdc58eb7585321cb1",
+      "train_candidate.py": "31cac8e569b2f737c8b8c4e4d3740cf3b8775e5d7ead88c57e75ba3c5dfa7333"
+    },
+    "python": "3.12.5",
+    "torch": "2.8.0",
+    "numpy": "2.2.6",
+    "device": "cpu",
+    "training_scenario_rule": "1000000 * training_seed + episode_index",
+    "validation_scenario_rule": "600000 + 101 * scenario_index",
+    "validation_scenarios": 200,
+    "test_scenarios_used": false,
+    "forced_wait_compression": "actual suffix rewards folded into prior transition with duration discount",
+    "elapsed_seconds": 600.4915463329999,
+    "validation_means": [
+      {
+        "episodes": 2000,
+        "seeds": [
+          101,
+          202
+        ],
+        "return": -4.122868488270043,
+        "total_compromises": 1.115,
+        "critical_compromises": 0.09,
+        "uncontained_at_end": 0.045,
+        "false_isolations": 1.055,
+        "successful_isolations": 1.0699999999999998,
+        "action_costs": 6.0,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.0,
+        "censored_confirmation_delay": 47.83170833333334
+      },
+      {
+        "episodes": 5000,
+        "seeds": [
+          101,
+          202
+        ],
+        "return": -3.0323457309797397,
+        "total_compromises": 1.2025000000000001,
+        "critical_compromises": 0.12,
+        "uncontained_at_end": 0.08,
+        "false_isolations": 0.23500000000000001,
+        "successful_isolations": 1.1225,
+        "action_costs": 6.0,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.08375,
+        "censored_confirmation_delay": 43.826791666666665
+      },
+      {
+        "episodes": 10000,
+        "seeds": [
+          101,
+          202
+        ],
+        "return": -3.2634249905005097,
+        "total_compromises": 1.2525,
+        "critical_compromises": 0.155,
+        "uncontained_at_end": 0.1325,
+        "false_isolations": 0.0875,
+        "successful_isolations": 1.12,
+        "action_costs": 5.99,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.19237499999999996,
+        "censored_confirmation_delay": 38.62233333333333
+      },
+      {
+        "episodes": 20000,
+        "seeds": [
+          101,
+          202
+        ],
+        "return": -2.3094689856261015,
+        "total_compromises": 1.1925,
+        "critical_compromises": 0.12,
+        "uncontained_at_end": 0.07500000000000001,
+        "false_isolations": 0.0975,
+        "successful_isolations": 1.1175000000000002,
+        "action_costs": 3.705,
+        "invalid_actions": 0.0,
+        "confirmed_fraction": 0.31945833333333334,
+        "censored_confirmation_delay": 32.93654166666667
+      }
+    ]
+  },
+  {
+    "status": "RUNNING",
+    "family": "final_v5_temporal",
+    "assigned_training_seed": 17,
+    "prespecified_training_seeds": [
+      17,
+      29,
+      43,
+      71,
+      89
+    ],
+    "training_episodes": 20000,
+    "selected_template": "candidates/belief_shared_n3_mse_v5/seed101_ep20000.pt",
+    "selected_template_sha256": "be002febdc1ffcab5a602cd853b85470f88d50475ee213cc2aaddc93e8d0b8b7",
+    "template_parameter_hash": "6f6c31396bf5a4990970cc03f6281e68f4add08731fe6caf3965a1cad3629588",
+    "config": {
+      "gamma": 1.0,
+      "representation": "sufficient",
+      "architecture": "shared_host",
+      "learning_rate": 0.0003,
+      "batch_size": 128,
+      "replay_capacity": 30000,
+      "learning_starts": 1000,
+      "train_every": 1,
+      "target_sync_updates": 500,
+      "epsilon_start": 1.0,
+      "epsilon_end": 0.02,
+      "epsilon_decay_steps": 240000,
+      "hidden_size": 128,
+      "n_step": 3,
+      "grad_clip": 10.0,
+      "huber_beta": 5.0,
+      "td_loss": "mse",
+      "compress_forced_wait": true
+    },
+    "environment": {
+      "horizon": 48,
+      "response_budget": 6,
+      "attack_base_probability": 0.23,
+      "alert_sensitivity": 0.55,
+      "false_positive_rate": 0.08,
+      "patch_multiplier": 0.2,
+      "decoy_multiplier": 0.25,
+      "alert_ema_alpha": 0.35
+    },
+    "source_sha256": {
+      "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+      "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+      "src/champion.py": "014a875fbecd4f758ea62a3e6b019bdca3e42f0458b2a94ef9f6fd9e20854987",
+      "train_candidate.py": "31cac8e569b2f737c8b8c4e4d3740cf3b8775e5d7ead88c57e75ba3c5dfa7333",
+      "train_final.py": "408fb2eec9f072e1b70a9f9d8b5b382d833dbef01bb4fecdee40fc0e6d436af5"
+    },
+    "training_scenario_rule": "1000000*training_seed+episode_index",
+    "timestamp_utc": "2026-10-26T12:21:55.131408+00:00",
+    "device": "cpu",
+    "python": "3.12.5",
+    "numpy": "2.2.6",
+    "torch": "2.8.0",
+    "validation_executed": false,
+    "final_test_executed": false,
+    "checkpoint_selection": "fixed selected budget for every prespecified seed",
+    "preserved_checkpoint_episodes": [
+      10000,
+      20000
+    ],
+    "initial_parameter_hash": "3aa6e5eb32a6cbd77234098d47901cb9f39bbd5fe149cd78502a4a3f95591fe8"
+  },
+  {
+    "status": "RUNNING",
+    "family": "final_v5_temporal",
+    "assigned_training_seed": 29,
+    "prespecified_training_seeds": [
+      17,
+      29,
+      43,
+      71,
+      89
+    ],
+    "training_episodes": 20000,
+    "selected_template": "candidates/belief_shared_n3_mse_v5/seed101_ep20000.pt",
+    "selected_template_sha256": "be002febdc1ffcab5a602cd853b85470f88d50475ee213cc2aaddc93e8d0b8b7",
+    "template_parameter_hash": "6f6c31396bf5a4990970cc03f6281e68f4add08731fe6caf3965a1cad3629588",
+    "config": {
+      "gamma": 1.0,
+      "representation": "sufficient",
+      "architecture": "shared_host",
+      "learning_rate": 0.0003,
+      "batch_size": 128,
+      "replay_capacity": 30000,
+      "learning_starts": 1000,
+      "train_every": 1,
+      "target_sync_updates": 500,
+      "epsilon_start": 1.0,
+      "epsilon_end": 0.02,
+      "epsilon_decay_steps": 240000,
+      "hidden_size": 128,
+      "n_step": 3,
+      "grad_clip": 10.0,
+      "huber_beta": 5.0,
+      "td_loss": "mse",
+      "compress_forced_wait": true
+    },
+    "environment": {
+      "horizon": 48,
+      "response_budget": 6,
+      "attack_base_probability": 0.23,
+      "alert_sensitivity": 0.55,
+      "false_positive_rate": 0.08,
+      "patch_multiplier": 0.2,
+      "decoy_multiplier": 0.25,
+      "alert_ema_alpha": 0.35
+    },
+    "source_sha256": {
+      "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+      "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+      "src/champion.py": "014a875fbecd4f758ea62a3e6b019bdca3e42f0458b2a94ef9f6fd9e20854987",
+      "train_candidate.py": "31cac8e569b2f737c8b8c4e4d3740cf3b8775e5d7ead88c57e75ba3c5dfa7333",
+      "train_final.py": "408fb2eec9f072e1b70a9f9d8b5b382d833dbef01bb4fecdee40fc0e6d436af5"
+    },
+    "training_scenario_rule": "1000000*training_seed+episode_index",
+    "timestamp_utc": "2026-10-26T12:27:59.113153+00:00",
+    "device": "cpu",
+    "python": "3.12.5",
+    "numpy": "2.2.6",
+    "torch": "2.8.0",
+    "validation_executed": false,
+    "final_test_executed": false,
+    "checkpoint_selection": "fixed selected budget for every prespecified seed",
+    "preserved_checkpoint_episodes": [
+      10000,
+      20000
+    ],
+    "initial_parameter_hash": "a924fd3ae7dcb25dfa83839f4fa731309eb99743678e8506243d66ec8d1c3d1e"
+  },
+  {
+    "status": "RUNNING",
+    "family": "final_v5_temporal",
+    "assigned_training_seed": 43,
+    "prespecified_training_seeds": [
+      17,
+      29,
+      43,
+      71,
+      89
+    ],
+    "training_episodes": 20000,
+    "selected_template": "candidates/belief_shared_n3_mse_v5/seed101_ep20000.pt",
+    "selected_template_sha256": "be002febdc1ffcab5a602cd853b85470f88d50475ee213cc2aaddc93e8d0b8b7",
+    "template_parameter_hash": "6f6c31396bf5a4990970cc03f6281e68f4add08731fe6caf3965a1cad3629588",
+    "config": {
+      "gamma": 1.0,
+      "representation": "sufficient",
+      "architecture": "shared_host",
+      "learning_rate": 0.0003,
+      "batch_size": 128,
+      "replay_capacity": 30000,
+      "learning_starts": 1000,
+      "train_every": 1,
+      "target_sync_updates": 500,
+      "epsilon_start": 1.0,
+      "epsilon_end": 0.02,
+      "epsilon_decay_steps": 240000,
+      "hidden_size": 128,
+      "n_step": 3,
+      "grad_clip": 10.0,
+      "huber_beta": 5.0,
+      "td_loss": "mse",
+      "compress_forced_wait": true
+    },
+    "environment": {
+      "horizon": 48,
+      "response_budget": 6,
+      "attack_base_probability": 0.23,
+      "alert_sensitivity": 0.55,
+      "false_positive_rate": 0.08,
+      "patch_multiplier": 0.2,
+      "decoy_multiplier": 0.25,
+      "alert_ema_alpha": 0.35
+    },
+    "source_sha256": {
+      "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+      "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+      "src/champion.py": "014a875fbecd4f758ea62a3e6b019bdca3e42f0458b2a94ef9f6fd9e20854987",
+      "train_candidate.py": "31cac8e569b2f737c8b8c4e4d3740cf3b8775e5d7ead88c57e75ba3c5dfa7333",
+      "train_final.py": "408fb2eec9f072e1b70a9f9d8b5b382d833dbef01bb4fecdee40fc0e6d436af5"
+    },
+    "training_scenario_rule": "1000000*training_seed+episode_index",
+    "timestamp_utc": "2026-10-26T12:27:59.113460+00:00",
+    "device": "cpu",
+    "python": "3.12.5",
+    "numpy": "2.2.6",
+    "torch": "2.8.0",
+    "validation_executed": false,
+    "final_test_executed": false,
+    "checkpoint_selection": "fixed selected budget for every prespecified seed",
+    "preserved_checkpoint_episodes": [
+      10000,
+      20000
+    ],
+    "initial_parameter_hash": "4308620982addef18dd2d2d8f7c88bb241ab7cd14ff67556af1f202efe22f4a5"
+  },
+  {
+    "status": "RUNNING",
+    "family": "final_v5_temporal",
+    "assigned_training_seed": 71,
+    "prespecified_training_seeds": [
+      17,
+      29,
+      43,
+      71,
+      89
+    ],
+    "training_episodes": 20000,
+    "selected_template": "candidates/belief_shared_n3_mse_v5/seed101_ep20000.pt",
+    "selected_template_sha256": "be002febdc1ffcab5a602cd853b85470f88d50475ee213cc2aaddc93e8d0b8b7",
+    "template_parameter_hash": "6f6c31396bf5a4990970cc03f6281e68f4add08731fe6caf3965a1cad3629588",
+    "config": {
+      "gamma": 1.0,
+      "representation": "sufficient",
+      "architecture": "shared_host",
+      "learning_rate": 0.0003,
+      "batch_size": 128,
+      "replay_capacity": 30000,
+      "learning_starts": 1000,
+      "train_every": 1,
+      "target_sync_updates": 500,
+      "epsilon_start": 1.0,
+      "epsilon_end": 0.02,
+      "epsilon_decay_steps": 240000,
+      "hidden_size": 128,
+      "n_step": 3,
+      "grad_clip": 10.0,
+      "huber_beta": 5.0,
+      "td_loss": "mse",
+      "compress_forced_wait": true
+    },
+    "environment": {
+      "horizon": 48,
+      "response_budget": 6,
+      "attack_base_probability": 0.23,
+      "alert_sensitivity": 0.55,
+      "false_positive_rate": 0.08,
+      "patch_multiplier": 0.2,
+      "decoy_multiplier": 0.25,
+      "alert_ema_alpha": 0.35
+    },
+    "source_sha256": {
+      "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+      "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+      "src/champion.py": "014a875fbecd4f758ea62a3e6b019bdca3e42f0458b2a94ef9f6fd9e20854987",
+      "train_candidate.py": "31cac8e569b2f737c8b8c4e4d3740cf3b8775e5d7ead88c57e75ba3c5dfa7333",
+      "train_final.py": "408fb2eec9f072e1b70a9f9d8b5b382d833dbef01bb4fecdee40fc0e6d436af5"
+    },
+    "training_scenario_rule": "1000000*training_seed+episode_index",
+    "timestamp_utc": "2026-10-26T12:27:59.113684+00:00",
+    "device": "cpu",
+    "python": "3.12.5",
+    "numpy": "2.2.6",
+    "torch": "2.8.0",
+    "validation_executed": false,
+    "final_test_executed": false,
+    "checkpoint_selection": "fixed selected budget for every prespecified seed",
+    "preserved_checkpoint_episodes": [
+      10000,
+      20000
+    ],
+    "initial_parameter_hash": "fc2a2ec3396bf8b4cc50891830ad090529c5f53079d092ed385f5b6165811b12"
+  },
+  {
+    "status": "RUNNING",
+    "family": "final_v5_temporal",
+    "assigned_training_seed": 89,
+    "prespecified_training_seeds": [
+      17,
+      29,
+      43,
+      71,
+      89
+    ],
+    "training_episodes": 20000,
+    "selected_template": "candidates/belief_shared_n3_mse_v5/seed101_ep20000.pt",
+    "selected_template_sha256": "be002febdc1ffcab5a602cd853b85470f88d50475ee213cc2aaddc93e8d0b8b7",
+    "template_parameter_hash": "6f6c31396bf5a4990970cc03f6281e68f4add08731fe6caf3965a1cad3629588",
+    "config": {
+      "gamma": 1.0,
+      "representation": "sufficient",
+      "architecture": "shared_host",
+      "learning_rate": 0.0003,
+      "batch_size": 128,
+      "replay_capacity": 30000,
+      "learning_starts": 1000,
+      "train_every": 1,
+      "target_sync_updates": 500,
+      "epsilon_start": 1.0,
+      "epsilon_end": 0.02,
+      "epsilon_decay_steps": 240000,
+      "hidden_size": 128,
+      "n_step": 3,
+      "grad_clip": 10.0,
+      "huber_beta": 5.0,
+      "td_loss": "mse",
+      "compress_forced_wait": true
+    },
+    "environment": {
+      "horizon": 48,
+      "response_budget": 6,
+      "attack_base_probability": 0.23,
+      "alert_sensitivity": 0.55,
+      "false_positive_rate": 0.08,
+      "patch_multiplier": 0.2,
+      "decoy_multiplier": 0.25,
+      "alert_ema_alpha": 0.35
+    },
+    "source_sha256": {
+      "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+      "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+      "src/champion.py": "014a875fbecd4f758ea62a3e6b019bdca3e42f0458b2a94ef9f6fd9e20854987",
+      "train_candidate.py": "31cac8e569b2f737c8b8c4e4d3740cf3b8775e5d7ead88c57e75ba3c5dfa7333",
+      "train_final.py": "408fb2eec9f072e1b70a9f9d8b5b382d833dbef01bb4fecdee40fc0e6d436af5"
+    },
+    "training_scenario_rule": "1000000*training_seed+episode_index",
+    "timestamp_utc": "2026-10-26T12:27:59.111540+00:00",
+    "device": "cpu",
+    "python": "3.12.5",
+    "numpy": "2.2.6",
+    "torch": "2.8.0",
+    "validation_executed": false,
+    "final_test_executed": false,
+    "checkpoint_selection": "fixed selected budget for every prespecified seed",
+    "preserved_checkpoint_episodes": [
+      10000,
+      20000
+    ],
+    "initial_parameter_hash": "43bdf52d71614dc37cbf18ad2383f351bc310806ac97af9fa51192b72dcc5d18"
+  }
+]

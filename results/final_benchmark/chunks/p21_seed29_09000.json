@@ -1,0 +1,12 @@
+{
+  "policy": "graph_prior_shield_td_retrained",
+  "model_seeds": [
+    29
+  ],
+  "scenario_first_index": 9000,
+  "scenario_stop_index": 10000,
+  "rows": 1000,
+  "elapsed_seconds": 14.623616624998249,
+  "sha256": "2a6e9f50ffb221aef9e736cc3b20376bef3cfdd48f07f459772c45a44b85181a",
+  "created_utc": "2026-10-26T13:07:33.955590+00:00"
+}

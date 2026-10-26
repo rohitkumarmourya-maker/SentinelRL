@@ -1,0 +1,12 @@
+{
+  "policy": "original_threshold",
+  "model_seeds": [
+    0
+  ],
+  "scenario_first_index": 9000,
+  "scenario_stop_index": 10000,
+  "rows": 1000,
+  "elapsed_seconds": 3.3690970829993603,
+  "sha256": "91387a843b7aa8964a9f5e388f0d39078b9d9c2b0f7bf6f6c55f8f7ccc6b6b5b",
+  "created_utc": "2026-10-26T13:01:35.016664+00:00"
+}

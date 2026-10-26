@@ -1,0 +1,2 @@
+policy,model_seeds,scenarios,return_mean,total_compromises_mean,critical_compromises_mean,uncontained_at_end_mean,false_isolations_mean,successful_isolations_mean,action_costs_mean,invalid_actions_mean,confirmed_fraction_mean,censored_confirmation_delay_mean
+champion_temporal_ensemble,1,200,-1.8568534810483448,1.13,0.08,0.035,0.195,1.095,3.395,0.0,0.10666666666666666,42.92658333333334

@@ -1,0 +1,12 @@
+{
+  "policy": "graph_pure_individual_20k",
+  "model_seeds": [
+    71
+  ],
+  "scenario_first_index": 0,
+  "scenario_stop_index": 1000,
+  "rows": 1000,
+  "elapsed_seconds": 4.866224375000456,
+  "sha256": "8176a4871929d0ccef29234f59c11ab14906c3e25202cacc9c1b87001dd3308a",
+  "created_utc": "2026-10-26T13:06:21.470772+00:00"
+}

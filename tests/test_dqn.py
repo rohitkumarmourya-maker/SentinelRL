@@ -1,66 +1,56 @@
-import numpy as np
+"""Model correctness tests: real gradient, target, legal-action and checkpoint checks."""
+import pytest
+pytestmark = pytest.mark.model
 
-try:
+
+def test_double_dqn_online_selection_target_evaluation_and_terminal_mask():
     import torch
-except ImportError:
-    from src._torch_compat import torch  # type: ignore
-
-from src.dqn import DQNAgent, DQNConfig
-from src.environment import SentinelEnv, OBS_DIM, N_ACTIONS, ISOLATE_BASE, INSPECT_BASE
-from src.policies import TabularQLearningAgent, AlertResponderPolicy
-
-
-def test_masking_and_checkpoint_round_trip(tmp_path):
-    torch.set_num_threads(1)
-    cfg = DQNConfig(batch_size=4, learning_starts=4, replay_capacity=20, hidden_size=32, train_every=1)
-    agent = DQNAgent(OBS_DIM, N_ACTIONS, seed=3, config=cfg)
-    env = SentinelEnv(seed=3)
-    obs, info = env.reset(seed=3)
-    mask = info["action_mask"]
-    action = agent.act(obs, mask)
-    assert mask[action]
-    path = tmp_path / "model.pt"
-    agent.save(str(path), metadata={"test": True})
-    restored = DQNAgent.load(str(path))
-    action2 = restored.act(obs, mask)
-    assert mask[action2]
-    with torch.no_grad():
-        q1 = agent.online(torch.as_tensor(obs).unsqueeze(0))
-        q2 = restored.online(torch.as_tensor(obs).unsqueeze(0))
-    torch.testing.assert_close(q1, q2)
+    from src.dqn import double_dqn_targets
+    rewards = torch.tensor([1., 2.])
+    dones = torch.tensor([0., 1.])
+    online = torch.tensor([[100., 2., 3.], [9., 8., 7.]])
+    target = torch.tensor([[400., 50., 6.], [1., 2., 3.]])
+    masks = torch.tensor([[False, True, True], [True, True, True]])
+    actual = double_dqn_targets(rewards, dones, online, target, masks, .9)
+    torch.testing.assert_close(actual, torch.tensor([6.4, 2.]))
 
 
-def test_training_update_returns_finite_loss():
-    torch.set_num_threads(1)
-    cfg = DQNConfig(batch_size=4, learning_starts=4, replay_capacity=20, hidden_size=32, train_every=1)
-    agent = DQNAgent(OBS_DIM, N_ACTIONS, seed=4, config=cfg)
-    obs = np.zeros(OBS_DIM, dtype=np.float32)
-    next_obs = np.ones(OBS_DIM, dtype=np.float32) * 0.1
-    mask = np.ones(N_ACTIONS, dtype=bool)
-    for i in range(8):
-        agent.steps += 1
-        agent.remember(obs, i % N_ACTIONS, 0.5, next_obs, False, mask)
-    loss = agent.learn()
-    assert loss is not None and np.isfinite(loss)
+def test_actual_gradient_updates_change_parameters_and_sync_target():
+    import numpy as np
+    import torch
+    from src.dqn import DQNAgent, DQNConfig
+    config = DQNConfig(batch_size=2, replay_capacity=8, learning_starts=2, train_every=1, target_sync_updates=1)
+    agent = DQNAgent(seed=7, config=config)
+    initial = agent.parameter_hash()
+    state, next_state, mask = np.zeros(56, dtype=np.float32), np.ones(56, dtype=np.float32), np.ones(25, dtype=bool)
+    agent.observe(state, 1, 5., next_state, False, mask)
+    update = agent.observe(next_state, 2, -3., state, True, mask)
+    assert update['gradient_norm'] > 0 and agent.updates == 1
+    assert initial != agent.parameter_hash()
+    for a, b in zip(agent.online.parameters(), agent.target.parameters()):
+        torch.testing.assert_close(a, b)
+    assert all(p.grad is None for p in agent.target.parameters())
 
 
-def test_safety_shield_blocks_unverified_isolation():
-    agent = DQNAgent(OBS_DIM, N_ACTIONS, seed=7)
-    env = SentinelEnv(seed=7)
-    obs, info = env.reset(seed=7)
-    mask = info["action_mask"]
-    chosen = agent.act(obs, mask, explore=False)
-    # At t=0 before inspection, no host is confirmed and max belief is 0.22 (<0.70), so agent inspects rather than falsely isolating
-    assert INSPECT_BASE <= chosen < INSPECT_BASE + 6
-    assert not (ISOLATE_BASE <= chosen < ISOLATE_BASE + 6)
+def test_checkpoint_roundtrip_and_legal_action(tmp_path):
+    import numpy as np
+    from src.dqn import DQNAgent
+    agent = DQNAgent(seed=3)
+    state, mask = np.zeros(56, dtype=np.float32), np.zeros(25, dtype=bool)
+    mask[7] = True
+    assert agent.act(state, mask) == 7
+    path = tmp_path / 'model.pt'
+    agent.save(path, {'version': 'synthetic unit test only'})
+    loaded = DQNAgent.load(path)
+    assert loaded.parameter_hash() == agent.parameter_hash()
+    assert loaded.act(state, mask) == 7
 
 
-def test_tabular_q_learning_updates_and_masks():
-    tab = TabularQLearningAgent(seed=11)
-    env = SentinelEnv(seed=11)
-    obs, info = env.reset(seed=11)
-    a = tab.act(obs, info["action_mask"], epsilon=0.0)
-    assert info["action_mask"][a]
-    n_obs, r, term, trunc, n_info = env.step(a)
-    tab.update(obs, a, r, n_obs, term or trunc, n_info["action_mask"])
-    assert len(tab.q_table) >= 1
+def test_no_memory_ablation_only_removes_documented_features():
+    import numpy as np
+    from src.dqn import transform_observation
+    state = np.ones(56, dtype=np.float32)
+    result = transform_observation(state, 'no_memory')
+    assert (result[:54].reshape(6, 9)[:, 1:4] == 0).all()
+    assert (result[-2:] == 1).all()
+    assert (state == 1).all()

@@ -1,0 +1,4 @@
+policy,seed,episodes,return,total_compromises,critical_compromises,uncontained_at_end,false_isolations,successful_isolations,action_costs,invalid_actions,confirmed_fraction,censored_confirmation_delay
+alert_rule,0,0,-13.3008839425087,2.3,0.715,0.865,0.0,1.435,6.0,0.0,0.8608333333333333,6.635250000000001
+graph_pure,89,10000,-4.752159988433124,1.33,0.19,0.215,0.295,1.115,6.0,0.0,0.086,43.372749999999996
+graph_pure,89,20000,-3.5422754872679705,1.255,0.125,0.165,0.16,1.09,6.0,0.0,0.056416666666666664,44.967

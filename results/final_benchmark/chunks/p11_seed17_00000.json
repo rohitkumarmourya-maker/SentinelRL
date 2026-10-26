@@ -1,0 +1,12 @@
+{
+  "policy": "original_no_stealth_transfer",
+  "model_seeds": [
+    17
+  ],
+  "scenario_first_index": 0,
+  "scenario_stop_index": 1000,
+  "rows": 1000,
+  "elapsed_seconds": 15.872764166000707,
+  "sha256": "3eaa8b6f9934dac66a5196d1c237f6358f04ac58c170264a11b78698284db9ef",
+  "created_utc": "2026-10-26T13:02:47.021375+00:00"
+}

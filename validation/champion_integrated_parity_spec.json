@@ -1,0 +1,100 @@
+{
+  "primary_policy": "champion_temporal_ensemble",
+  "policies": [
+    {
+      "name": "champion_temporal_ensemble",
+      "kind": "ensemble",
+      "subtype": "snapshot_learned",
+      "members": [
+        {
+          "member_id": "seed17_ep10000",
+          "training_seed": 17,
+          "training_episodes": 10000,
+          "checkpoint": "candidates/final_v5_temporal_seed17/seed17_ep10000.pt"
+        },
+        {
+          "member_id": "seed17_ep20000",
+          "training_seed": 17,
+          "training_episodes": 20000,
+          "checkpoint": "candidates/final_v5_temporal_seed17/seed17_ep20000.pt"
+        },
+        {
+          "member_id": "seed29_ep10000",
+          "training_seed": 29,
+          "training_episodes": 10000,
+          "checkpoint": "candidates/final_v5_temporal_seed29/seed29_ep10000.pt"
+        },
+        {
+          "member_id": "seed29_ep20000",
+          "training_seed": 29,
+          "training_episodes": 20000,
+          "checkpoint": "candidates/final_v5_temporal_seed29/seed29_ep20000.pt"
+        },
+        {
+          "member_id": "seed43_ep10000",
+          "training_seed": 43,
+          "training_episodes": 10000,
+          "checkpoint": "candidates/final_v5_temporal_seed43/seed43_ep10000.pt"
+        },
+        {
+          "member_id": "seed43_ep20000",
+          "training_seed": 43,
+          "training_episodes": 20000,
+          "checkpoint": "candidates/final_v5_temporal_seed43/seed43_ep20000.pt"
+        },
+        {
+          "member_id": "seed71_ep10000",
+          "training_seed": 71,
+          "training_episodes": 10000,
+          "checkpoint": "candidates/final_v5_temporal_seed71/seed71_ep10000.pt"
+        },
+        {
+          "member_id": "seed71_ep20000",
+          "training_seed": 71,
+          "training_episodes": 20000,
+          "checkpoint": "candidates/final_v5_temporal_seed71/seed71_ep20000.pt"
+        },
+        {
+          "member_id": "seed89_ep10000",
+          "training_seed": 89,
+          "training_episodes": 10000,
+          "checkpoint": "candidates/final_v5_temporal_seed89/seed89_ep10000.pt"
+        },
+        {
+          "member_id": "seed89_ep20000",
+          "training_seed": 89,
+          "training_episodes": 20000,
+          "checkpoint": "candidates/final_v5_temporal_seed89/seed89_ep20000.pt"
+        }
+      ],
+      "member_weight": "uniform1/10",
+      "model_seeds": [
+        0
+      ],
+      "checkpoint_sha256": {
+        "seed17_ep10000": "37b8701d3723e20460ae0e1247ad12489e2a7cfc50478a4550398cd9e39c6822",
+        "seed17_ep20000": "8df44e57d3a56b42bfc75659d4e0112174b4a38e93a18f298ac3eb116020222e",
+        "seed29_ep10000": "cf99c26587717ae01cba0e72d5dfa7ff8c424b0c9556a727a8de05cd292c6758",
+        "seed29_ep20000": "a1a6cde97c8b3f00c38ced7da41e27acf3b756281d91331ca832c6a116524754",
+        "seed43_ep10000": "f3decc7469f597feaab7961b2b5875530bfb9e78056eb9dcdffba7e3afd05617",
+        "seed43_ep20000": "936dbe77eefb71e675c404ba308b90bb097c9636268180cffbc86f2f43f6883f",
+        "seed71_ep10000": "4dcf9dbe9cb9a30764317f7dd35911ebab62baaa5d5d8f308a328869085b0964",
+        "seed71_ep20000": "e268668a01f2b6b329661c900a6313f08205df997f0f16e8be82e09922a591f5",
+        "seed89_ep10000": "35743cc4b621e37e0353bdf771084f0c597c5a2062c29e46849d51970fa982ab",
+        "seed89_ep20000": "f3bf61bf13773e17347bba1a031f05123fc3073e0bad1b4930f176e9c494b289"
+      }
+    }
+  ],
+  "environment": {
+    "horizon": 48,
+    "response_budget": 6,
+    "attack_base_probability": 0.23,
+    "alert_sensitivity": 0.55,
+    "false_positive_rate": 0.08,
+    "patch_multiplier": 0.2,
+    "decoy_multiplier": 0.25,
+    "alert_ema_alpha": 0.35
+  },
+  "environment_sha256": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+  "final_scenarios": 10000
+}

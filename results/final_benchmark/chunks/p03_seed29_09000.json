@@ -1,0 +1,12 @@
+{
+  "policy": "previous_no_memory",
+  "model_seeds": [
+    29
+  ],
+  "scenario_first_index": 9000,
+  "scenario_stop_index": 10000,
+  "rows": 1000,
+  "elapsed_seconds": 2.9453725420025876,
+  "sha256": "d4a8b930d68dd062f26f56fdfada9e1c581b790a89ba2b1d45bae5144642dbbf",
+  "created_utc": "2026-10-26T13:01:11.568460+00:00"
+}

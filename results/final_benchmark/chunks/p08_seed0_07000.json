@@ -1,0 +1,12 @@
+{
+  "policy": "original_patch",
+  "model_seeds": [
+    0
+  ],
+  "scenario_first_index": 7000,
+  "scenario_stop_index": 8000,
+  "rows": 1000,
+  "elapsed_seconds": 3.09063574999891,
+  "sha256": "215779b621b3411ac1ba0a9b77cbcfb0f0aa0cfac237aac1f9424ff403293ba3",
+  "created_utc": "2026-10-26T13:01:38.109608+00:00"
+}

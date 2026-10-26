@@ -1,0 +1,70 @@
+{
+  "name": "belief_dueling_n1_v2",
+  "created_utc": "2026-10-26T11:33:34.059694+00:00",
+  "status": "PRUNED",
+  "training_seeds": [
+    101,
+    202
+  ],
+  "training_episodes": 20000,
+  "config": {
+    "gamma": 1.0,
+    "learning_rate": 0.0003,
+    "batch_size": 128,
+    "replay_capacity": 50000,
+    "learning_starts": 1000,
+    "train_every": 1,
+    "target_sync_updates": 500,
+    "epsilon_start": 1.0,
+    "epsilon_end": 0.02,
+    "epsilon_decay_steps": 240000,
+    "hidden_size": 256,
+    "n_step": 1,
+    "grad_clip": 10.0,
+    "huber_beta": 5.0,
+    "compress_forced_wait": true
+  },
+  "environment": {
+    "horizon": 48,
+    "response_budget": 6,
+    "attack_base_probability": 0.23,
+    "alert_sensitivity": 0.55,
+    "false_positive_rate": 0.08,
+    "patch_multiplier": 0.2,
+    "decoy_multiplier": 0.25,
+    "alert_ema_alpha": 0.35
+  },
+  "source_sha256": {
+    "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+    "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+    "src/champion.py": "a2c6feadfb7ebfec85384e1c5c7e0524e60092a2663f13e99a9637d7542a1aac",
+    "train_candidate.py": "31cac8e569b2f737c8b8c4e4d3740cf3b8775e5d7ead88c57e75ba3c5dfa7333"
+  },
+  "python": "3.12.5",
+  "torch": "2.8.0",
+  "numpy": "2.2.6",
+  "device": "cpu",
+  "training_scenario_rule": "1000000 * training_seed + episode_index",
+  "validation_scenario_rule": "600000 + 101 * scenario_index",
+  "validation_scenarios": 200,
+  "test_scenarios_used": false,
+  "forced_wait_compression": "actual suffix rewards folded into prior transition with duration discount",
+  "pruning_reason": "MLP one-step candidate failed to match shared-host three-step variants: second-seed 10000-episode validation return -6.8977 and first-seed 20000-episode result preserved. Freed this process slot for a standard importance-corrected PER candidate addressing late-WAIT replay imbalance.",
+  "actual_completed_logged_episodes": {
+    "101": 20000,
+    "202": 11500
+  },
+  "actual_completed_checkpoint_episodes": {
+    "101": [
+      2000,
+      5000,
+      10000,
+      20000
+    ],
+    "202": [
+      2000,
+      5000,
+      10000
+    ]
+  }
+}

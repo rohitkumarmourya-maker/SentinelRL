@@ -1,0 +1,163 @@
+{
+  "status": "COMPLETE",
+  "original_commit": "dff57ab019fde89506ea2969d7c384ce532a2bbf",
+  "started_utc": "2026-10-26T11:16:26.871047+00:00",
+  "finished_utc": "2026-10-26T11:16:32.598623+00:00",
+  "elapsed_seconds": 5.727587540999593,
+  "main_evaluation_seconds": 1.3262377499995637,
+  "ablation_with_tabular_training_seconds": 3.4817507500010834,
+  "python": "3.12.5",
+  "numpy": "2.2.6",
+  "pandas": "2.2.2",
+  "torch": "2.8.0",
+  "matplotlib": "3.9.2",
+  "real_pytorch": true,
+  "device": "cpu",
+  "threads": 1,
+  "architecture": "arm64",
+  "checkpoint_loads": [
+    {
+      "seed": 17,
+      "checkpoint_sha256": "26a6f39b23ecc1c6b9962c7c7b4771ec5c0bd3cef5f4b69e0e292f85658b41e2",
+      "strict_load": true,
+      "missing_keys": [],
+      "unexpected_keys": [],
+      "online_parameter_hash": "457765f3438b7aa66c855bccb183bd59b4bad96069c93f79c80f54b8059e667a",
+      "steps": 13440,
+      "updates": 1680,
+      "config": {
+        "gamma": 0.99,
+        "learning_rate": 0.0004,
+        "batch_size": 64,
+        "replay_capacity": 16000,
+        "learning_starts": 120,
+        "train_every": 8,
+        "target_sync_steps": 250,
+        "tau": 0.005,
+        "epsilon_start": 0.9,
+        "epsilon_end": 0.02,
+        "epsilon_decay_steps": 8736,
+        "hidden_size": 128,
+        "grad_clip": 5.0,
+        "n_step": 3,
+        "expert_margin": 0.8,
+        "margin_weight": 0.8,
+        "use_topological_prior": true,
+        "use_stealth_detector": true
+      },
+      "metadata": {
+        "seed": 17,
+        "episodes": 280,
+        "env": {
+          "horizon": 48,
+          "response_budget": 6,
+          "attack_base_probability": 0.23,
+          "alert_sensitivity": 0.55,
+          "false_positive_rate": 0.08
+        }
+      }
+    },
+    {
+      "seed": 29,
+      "checkpoint_sha256": "c24e0fba421ac8148fbe4086e40e588bb500870b78366c12014221798dce51f0",
+      "strict_load": true,
+      "missing_keys": [],
+      "unexpected_keys": [],
+      "online_parameter_hash": "73da96cf47cf8059be18e350061cb6144be6b37894c53a2b7512e17d0c9e8251",
+      "steps": 13440,
+      "updates": 1680,
+      "config": {
+        "gamma": 0.99,
+        "learning_rate": 0.0004,
+        "batch_size": 64,
+        "replay_capacity": 16000,
+        "learning_starts": 120,
+        "train_every": 8,
+        "target_sync_steps": 250,
+        "tau": 0.005,
+        "epsilon_start": 0.9,
+        "epsilon_end": 0.02,
+        "epsilon_decay_steps": 8736,
+        "hidden_size": 128,
+        "grad_clip": 5.0,
+        "n_step": 3,
+        "expert_margin": 0.8,
+        "margin_weight": 0.8,
+        "use_topological_prior": true,
+        "use_stealth_detector": true
+      },
+      "metadata": {
+        "seed": 29,
+        "episodes": 280,
+        "env": {
+          "horizon": 48,
+          "response_budget": 6,
+          "attack_base_probability": 0.23,
+          "alert_sensitivity": 0.55,
+          "false_positive_rate": 0.08
+        }
+      }
+    },
+    {
+      "seed": 43,
+      "checkpoint_sha256": "3eb3a274278afb98ec5017d0f5356704d591a4f5f5c05e3b192e136d714f862e",
+      "strict_load": true,
+      "missing_keys": [],
+      "unexpected_keys": [],
+      "online_parameter_hash": "ea0567848726498510ce67c8e061c7a11c6932eb779f35a642ed8d7eeec1a3a8",
+      "steps": 13440,
+      "updates": 1680,
+      "config": {
+        "gamma": 0.99,
+        "learning_rate": 0.0004,
+        "batch_size": 64,
+        "replay_capacity": 16000,
+        "learning_starts": 120,
+        "train_every": 8,
+        "target_sync_steps": 250,
+        "tau": 0.005,
+        "epsilon_start": 0.9,
+        "epsilon_end": 0.02,
+        "epsilon_decay_steps": 8736,
+        "hidden_size": 128,
+        "grad_clip": 5.0,
+        "n_step": 3,
+        "expert_margin": 0.8,
+        "margin_weight": 0.8,
+        "use_topological_prior": true,
+        "use_stealth_detector": true
+      },
+      "metadata": {
+        "seed": 43,
+        "episodes": 280,
+        "env": {
+          "horizon": 48,
+          "response_budget": 6,
+          "attack_base_probability": 0.23,
+          "alert_sensitivity": 0.55,
+          "false_positive_rate": 0.08
+        }
+      }
+    }
+  ],
+  "execution_patch": "none",
+  "tracked_source_or_weights_changed": false,
+  "original_heldout_seed_formula": "300000+97*i;i=0..29",
+  "dqn_checkpoint_scenarios": 90,
+  "main_raw_rows": 210,
+  "ablation_raw_rows": 270,
+  "unique_matrix_rows": 390,
+  "tabular_training": "original evaluate_ablation function:3seeds\u00d7280episodes\u00d748steps;alpha.18,gamma.97,epsilon=max(.05,.85*(1-episode/220))",
+  "all_committed_summary_cells_match": true,
+  "main_raw_max_absolute_metric_difference": 3.552713678800501e-15,
+  "ci_scope": "Scenario bootstrap conditional on the3 fixed supplied checkpoints; not population training-seed uncertainty",
+  "scientific_scope": "Original reproduction only; hidden-state leakage, handcrafted Qprior/shield and different reward/env preclude fair direct comparison with corrected agent.",
+  "commands": [
+    "git clone /Users/goodday/Downloads/rohiy/SentinelRL-delivery/provenance/original-history.bundle /Users/goodday/Downloads/rohiy/SentinelRL-original-benchmark-20261026",
+    "python3 -u reproduce_original.py",
+    "python3 summarize_benchmark.py"
+  ],
+  "postprocessing": "Separate summarize_benchmark.py flattened per-seed headers and wrote compact CSV without running policies/models.",
+  "committed_summary_cells_compared": 136,
+  "source_or_checkpoint_patches": []
+}

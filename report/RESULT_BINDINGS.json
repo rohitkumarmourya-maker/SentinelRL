@@ -1,0 +1,51 @@
+{
+  "primary": "champion_temporal_ensemble",
+  "primary_return": -1.6372618393476004,
+  "return_nominal95": [
+    -1.7252716805258974,
+    -1.5517023981999811
+  ],
+  "adjusted_positive": 54,
+  "primary_contrasts": 55,
+  "rule_exception": {
+    "metric": "return",
+    "comparison": "champion_temporal_ensemble-minus-tuned_belief_threshold",
+    "comparator": "tuned_belief_threshold",
+    "mean_difference": "-0.08051369263756225",
+    "ci95_low": "-0.16589941624850263",
+    "ci95_high": "0.00416955231097111",
+    "familywise95_low": "-0.22305041737459272",
+    "familywise95_high": "0.06317902214083432",
+    "bonferroni_comparators": "55",
+    "per_comparison_alpha": "0.0009090909090909091",
+    "primary_seed_rows": "1",
+    "comparator_seed_rows": "1",
+    "paired_scenarios": "10000",
+    "familywise_lower_positive": "False"
+  },
+  "strongest_learned_comparison": {
+    "metric": "return",
+    "comparison": "champion_temporal_ensemble-minus-graph_pure_20k_ensemble",
+    "comparator": "graph_pure_20k_ensemble",
+    "mean_difference": "0.5371277400844097",
+    "ci95_low": "0.47409668011035905",
+    "ci95_high": "0.5999802669306794",
+    "familywise95_low": "0.4290332955662875",
+    "familywise95_high": "0.6457712075365666",
+    "bonferroni_comparators": "55",
+    "per_comparison_alpha": "0.0009090909090909091",
+    "primary_seed_rows": "1",
+    "comparator_seed_rows": "1",
+    "paired_scenarios": "10000",
+    "familywise_lower_positive": "True"
+  },
+  "training_worker_seconds": 3806.921769834,
+  "table_policy_rows": [
+    "champion_temporal_ensemble",
+    "tuned_belief_threshold",
+    "graph_pure_20k_ensemble",
+    "original_threshold",
+    "original_full_transfer",
+    "previous_alert_rule"
+  ]
+}

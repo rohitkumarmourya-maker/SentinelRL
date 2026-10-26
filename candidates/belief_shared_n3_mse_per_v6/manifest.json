@@ -1,0 +1,73 @@
+{
+  "name": "belief_shared_n3_mse_per_v6",
+  "created_utc": "2026-10-26T11:46:33.683033+00:00",
+  "status": "PRUNED",
+  "training_seeds": [
+    101,
+    202
+  ],
+  "training_episodes": 20000,
+  "config": {
+    "gamma": 1.0,
+    "representation": "sufficient",
+    "architecture": "shared_host",
+    "learning_rate": 0.0003,
+    "batch_size": 128,
+    "replay_capacity": 30000,
+    "learning_starts": 1000,
+    "train_every": 1,
+    "target_sync_updates": 500,
+    "epsilon_start": 1.0,
+    "epsilon_end": 0.02,
+    "epsilon_decay_steps": 240000,
+    "hidden_size": 128,
+    "n_step": 3,
+    "grad_clip": 10.0,
+    "huber_beta": 5.0,
+    "td_loss": "mse",
+    "prioritized_replay": true,
+    "priority_alpha": 0.6,
+    "importance_beta": 0.4,
+    "importance_anneal_updates": 200000,
+    "compress_forced_wait": true
+  },
+  "environment": {
+    "horizon": 48,
+    "response_budget": 6,
+    "attack_base_probability": 0.23,
+    "alert_sensitivity": 0.55,
+    "false_positive_rate": 0.08,
+    "patch_multiplier": 0.2,
+    "decoy_multiplier": 0.25,
+    "alert_ema_alpha": 0.35
+  },
+  "source_sha256": {
+    "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+    "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+    "src/champion.py": "a49881d61c5171cf215370888f8fe649f369e8a598bf12fc316ff56407a1933f",
+    "train_candidate.py": "31cac8e569b2f737c8b8c4e4d3740cf3b8775e5d7ead88c57e75ba3c5dfa7333"
+  },
+  "python": "3.12.5",
+  "torch": "2.8.0",
+  "numpy": "2.2.6",
+  "device": "cpu",
+  "training_scenario_rule": "1000000 * training_seed + episode_index",
+  "validation_scenario_rule": "600000 + 101 * scenario_index",
+  "validation_scenarios": 200,
+  "test_scenarios_used": false,
+  "forced_wait_compression": "actual suffix rewards folded into prior transition with duration discount",
+  "pruning_reason": "Successive-halving screen: common seed101 at10000episodes PER mean return -3.54346 versus uniform replay MSE -2.29686 and Huber -3.19947, with larger false-isolation burden. Preserved all checkpoints and validation rows; freed slot for original-architecture comparator.",
+  "actual_completed_logged_episodes": {
+    "101": 10500
+  },
+  "actual_completed_checkpoint_episodes": {
+    "101": [
+      2000,
+      5000,
+      10000
+    ]
+  },
+  "unstarted_training_seeds": [
+    202
+  ]
+}

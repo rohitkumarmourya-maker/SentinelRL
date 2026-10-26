@@ -1,149 +1,123 @@
-\documentclass[10pt]{article}
-\usepackage[margin=0.45in,top=0.38in,bottom=0.40in]{geometry}
-\usepackage{amsmath,amssymb,booktabs,graphicx,microtype,hyperref}
+% Final report template; verified result macros are generated only after the final run completes.
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=.56in,top=.46in,bottom=.48in]{geometry}
 \usepackage[T1]{fontenc}
-\usepackage{mathptmx}
-\hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue}
-\setlength{\parindent}{0.65em}
-\setlength{\parskip}{1.4pt}
-\setlength{\columnsep}{0.20in}
-\setlength{\emergencystretch}{2em}
-\pagestyle{plain}
-\newcommand{\figcap}[2]{\par\vspace{1pt}\noindent{\footnotesize\textbf{#1} #2}\par\vspace{3pt}}
+\usepackage{mathptmx,amsmath,amssymb,booktabs,graphicx,microtype,xcolor,hyperref}
+\definecolor{ink}{HTML}{234C72}
+\hypersetup{colorlinks=true,urlcolor=ink,citecolor=ink,linkcolor=ink}
+\setlength{\parindent}{0pt}\setlength{\parskip}{2.5pt}\setlength{\emergencystretch}{1.5em}
+\newcommand{\sect}[1]{\par\vspace{4pt}{\color{ink}\fontsize{11}{12}\selectfont\bfseries #1}\par\vspace{1pt}}
+\newcommand{\captext}[1]{{\footnotesize #1}\par}
+\newcommand{\ind}{\mathbf1}
+\input{verified_results.tex}
 \begin{document}
 \begin{center}
-{\Large\bfseries SentinelRL: Budgeted Adaptive Cyber Defence in a Partially Observed Network}\par
-\vspace{2pt}
-{\small \textbf{Team:} Rohit Mourya (B23ES1029), Jyotiraditya Singh Rathore (B23ES1017) \quad | \quad \textbf{GitHub:} \href{https://github.com/rohitkumarmourya-maker/SentinelRL}{\texttt{github.com/rohitkumarmourya-maker/SentinelRL}}}\par
-\vspace{3pt}
+{\Large\bfseries SentinelRL: Budgeted Network Defence with Deep RL}\par\vspace{4pt}
+{\small\textbf{Rohit Mourya (B23ES1029)}\quad\textbf{Jyotiraditya Singh Rathore (B23ES1017)}}\par
+{\small\href{https://github.com/rohitkumarmourya-maker/SentinelRL}{\texttt{github.com/rohitkumarmourya-maker/SentinelRL}}}\par
 \end{center}
-\noindent{\small\textbf{Abstract.} Enterprise network defenders must contain lateral attack propagation under noisy intrusion alerts and strict operational response budgets. We formulate adaptive cyber defense as a six-host Partially Observable Markov Decision Process (POMDP) over a 48-step horizon with a hard budget of six interventions across inspection, patching, isolation, and decoy deployment. We design a Topological-Bayesian Graph-Dueling Double-DQN combining normalized graph convolution, 3-step returns, stealth-transition belief priors, and a verification safety shield. Across 30 held-out scenarios and out-of-distribution attack-rate shifts, our agent outperforms all heuristic and tabular RL baselines in episode return ($-0.360$ vs.\ $-2.573$), critical-host compromises ($0.111$ vs.\ $0.233$), uncontained breaches ($0.044$ vs.\ $0.433$), detection delay ($0.922$ steps), and achieves zero false isolations ($0.000$).}\par
-\vspace{2pt}\hrule\vspace{3pt}
-
-\noindent\begin{minipage}[t]{0.484\textwidth}
-\small
-\section*{1. Problem and Environment Dynamics}
-Enterprise Security Operations Centers (SOCs) face sequential decision-making under uncertainty: inspecting a host reveals ground-truth compromise status, isolating a host severs lateral spread but disrupts operations if clean, patching hardens against future entry, and decoys divert attackers while raising high-confidence alerts. Because each intervention consumes one of only $B_0=6$ response tokens over a $T=48$-step episode and alerts are noisy, greedy or static threshold rules either exhaust budget prematurely or miss stealthy lateral propagation.
-
-Building on abstract cyber-range paradigms such as CyberBattleSim and autonomous cyber defense frameworks [1--4], SentinelRL models an enterprise graph $\mathcal{G}=(\mathcal{V},\mathcal{E})$ with $|\mathcal{V}|=6$ interconnected hosts: \emph{Edge Gateway} ($0$), \emph{Web Server} ($1$), \emph{App Server} ($2$), \emph{Database} ($3$), \emph{Staff Laptop} ($4$), and \emph{Backup Vault} ($5$), with undirected edges $\mathcal{E}=\{(0,1),(1,2),(2,3),(1,4),(4,2),(3,5),(2,5)\}$, vulnerabilities $v=[0.40,0.68,0.58,0.82,0.76,0.48]$, and criticalities $c=[0.45,0.62,0.80,1.00,0.52,0.96]$ (critical assets satisfy $c_i\ge 0.80$). At $t=0$, an attacker compromises either host $0$ ($p=0.62$) or host $4$ ($p=0.38$). At each step, every compromised, non-isolated source attempts lateral movement to each susceptible adjacent host $j$ with probability:
+\small\textbf{Abstract.} SentinelRL allocates scarce defensive interventions in a synthetic network with stochastic attack propagation and noisy alerts. An exact public-history belief filter feeds a learned dueling Double DQN; a fixed temporal ensemble averages ten checkpoints from five training runs. The environment rewards critical-asset protection while penalizing damage, delayed confirmation and unnecessary isolation. \AbstractResult\ The claims concern this fixed deployment and prespecified test, with diagnosis and service trade-offs assessed separately.
+\vspace{4pt}\hrule\vspace{3pt}
+\begin{minipage}[t]{.482\textwidth}\vspace{0pt}\small
+\sect{1. Task and stochastic environment}
+A defender has $ B_0=6 $ response tokens over $ T=48 $ steps. An intervention changes future exposure, observations and remaining resources, making the task sequential rather than a static alert-classification problem. Six hosts have fixed attributes
 \[
-p_j = p_{\text{base}}\, v_j\, m_j\, d_j,\qquad
-m_j=\begin{cases}0.16,&\text{patched},\\1.00,&\text{otherwise},\end{cases}
+\begin{aligned}
+v&=(.40,.68,.58,.82,.76,.48),\\
+c&=(.45,.62,.80,1,.52,.96),
+\end{aligned}
 \]
-where $p_{\text{base}}=0.23$ and $d_j=0.10$ with a decoy ($1.00$ otherwise). Non-isolated hosts emit noisy binary alerts $o_{t,i}\in\{0,1\}$ with sensitivity $q_d=0.55$ (if compromised) and false-positive rate $q_f=0.08$ (if clean).
+with $c_i\geq.80$ defining critical assets. Undirected edges are $(0,1)$, $(1,2)$, $(2,3)$, $(1,4)$, $(4,2)$, $(3,5)$ and $(2,5)$.
 
-\section*{2. RL / POMDP Formulation}
-\textbf{State Space ($\mathcal{S}\subset [0,1]^{58}$).} True compromise flags $z_{t,i}\in\{0,1\}$ are hidden. Each host maintains a recursive Bayesian belief $b_{t,i}\in[0.01,0.99]$ updated via $q_d,q_f$ after each alarm observation (with newly infected hosts initialized to prior $\ge 0.30$). The agent observes a $58$-dimensional continuous vector $s_t\in[0,1]^{58}$ comprising $9$ features per host ($6\times 9=54$: posterior belief $b_{t,i}$, current alert $o_{t,i}$, inspected flag, confirmed-compromise flag, $v_i$, $c_i$, patched, isolated, and decoy flags) and $4$ global context features: normalized remaining budget $B_t/6$, progress $t/48$, detected host fraction, and newly compromised host fraction from the last step ($\Delta N_t/6$).
+Initially one hidden foothold is at host 0 with probability $.62 $, otherwise host 4. A compromised, unisolated source attempts to infect each susceptible, unisolated neighbour $ j $ with probability
+\[
+q_j=.23v_j(.20)^{p_j}(.25)^{d_j},
+\]
+where $ p_j,d_j $ mark patch/decoy deployment. Sources are snapshotted: new infections spread on the next step. Isolation blocks incoming/outgoing movement; patch and decoy reduce risk without curing infection. Nonisolated hosts emit binary alerts with sensitivity $.55 $ and false-positive rate $.08 $. Independent pre-sampled noise supports paired comparisons. No real network traffic or adaptive attacker is modeled.
+\sect{2. State, observation and causal belief}
+The augmented reward-relevant state has 56 dynamic entries: per host, compromise, patch, isolation, decoy, alert, alert EWMA, last inspection result/time and ever-confirmed flag, plus budget/time. The hidden compromise pattern $ z\in\{0,1\}^6 $ has 64 possibilities. Graph, $ v,c $ are constants.
 
-\textbf{Action Space ($\mathcal{A}=\{0,\dots,24\}$).} The discrete space has $25$ actions constrained by a dynamic boolean legality mask $M_t\in\{0,1\}^{25}$: $a=0$ is \texttt{WAIT} ($0$ tokens, always legal); $1\text{--}6$ \texttt{INSPECT} host $i$ (reveals $z_{t,i}$, sets $b_{t,i}\in\{0.02,0.97\}$); $7\text{--}12$ \texttt{PATCH} host $i$; $13\text{--}18$ \texttt{ISOLATE} host $i$ (halts outgoing spread); and $19\text{--}24$ \texttt{DECOY} host $i$. Every non-\texttt{WAIT} action consumes $1$ token from $B_t$.
+Public observation $ o_t\in[0,1]^{56}$ has nine entries per host (alert, EWMA, last inspection result, normalized inspection age, $ v,c $, patch, isolation, decoy), plus $ B_t/6,t/48 $. Results encode unknown/clean/compromised as $ 0/.5/1 $ and remain stale after hidden infection; EWMA weight is $.35 $. No true infection count or actual entry identity is exposed.
+
+Using only public action/alert/inspection history $ h_t $, maintain $ b_t(x)=P(z_t=x\mid h_t)$ over 64 patterns~\cite{pomdp}. For an explicit inspection of $ i $ returning $ e $, let $ g_t(x)=\ind[x_i=e]$; otherwise $ g_t=1 $. Then
+\[
+b_{t+1}(x')\propto\Omega(y_{t+1}\mid x')\sum_xP_{a_t}(x'\mid x)b_t(x)g_t(x).
+\]
+Inspection conditions the pre-spread state; action-updated public defenses determine the transition, followed by the new alarm likelihood. Isolated sensors are ignored. Reset conditions the $.62/.38 $ prior on initial alerts. Exactness assumes the known synthetic law. The Q input $\xi_t\in[0,1]^{126}$ contains public/history features 56, joint posterior 64 and marginals 6. Raw alert/EWMA/age slots are zeroed; the inspection-result slot becomes a public-history ever-positive bit. The posterior retains the evidence.
 \end{minipage}\hfill
-\begin{minipage}[t]{0.484\textwidth}
-\small
-\textbf{Reward Function ($\mathcal{R}$).} At step $t$, the scalar reward $r_t$ balances rapid containment, critical-asset protection, and false-quarantine avoidance:
+\begin{minipage}[t]{.482\textwidth}\vspace{0pt}\small
+\sect{3. Actions and reward}
+The 25 actions are WAIT and six host-specific instances each of INSPECT, PATCH, ISOLATE and DECOY. A valid intervention costs one token. INSPECT reveals current compromise before spread. A public legality mask removes unavailable actions; WAIT is always legal.
+
+Let $ u_t $ indicate a valid intervention, $ q_t $ an invalid action, $ f_t $ a first successful explicit confirmation, $ N_t $ newly infected hosts, $ U_t $ unisolated infected hosts, $ F_t $ a clean host newly isolated and $ L_t $ all clean isolated hosts. With ever-confirmed flag $\nu_{t,j}$, define $ H_t=U_t\cap\{j:\nu_{t,j}=0\}$ and $ K_t=\{j\in U_t:c_j\geq.80\}$. Host sets use the post-action/post-spread state; the terminal clock is resulting $ t=T $:
 \begin{align*}
-r_t={}&-0.16\,\mathbb{I}_{\rm response}-0.45\,\mathbb{I}_{\rm invalid}+1.50\,\mathbb{I}_{\rm true\ inspect}-0.18\,\mathbb{I}_{\rm clean\ inspect}\notag\\
-&+0.12c_i\mathbb{I}_{\rm patch}+(1.10+0.55c_i)\mathbb{I}_{\rm true\ isolate}\notag\\
-&-(0.65+0.85c_i)\mathbb{I}_{\rm false\ isolate}+0.08v_i\mathbb{I}_{\rm decoy}\notag\\
-&-\sum_{j\in N_t}(2+4c_j)+0.75D_t+0.10A_t-0.06F_t\notag\\
-&-0.16\sum_{j\in U_t}c_j-1.4\,\mathbb{I}_{t=T}\sum_{j\in C_T}1,
+r_t={}&-.16u_t-.45q_t+.40f_t\\
+&-\sum_{j\in N_t}(2+4c_j)-.16\sum_{j\in U_t}c_j\\
+&-\sum_{j\in F_t}(.65+.85c_j)-.03\sum_{j\in L_t}c_j\\
+&-.04\sum_{j\in H_t}c_j-1.4\cdot\ind[t=T]|K_t|.
 \end{align*}
-where $N_t$ is newly compromised hosts, $D_t$ is decoy diversions, $A_t,F_t$ are newly triggered true/false alerts, $U_t$ is active unisolated compromised hosts, and $C_T$ is critical hosts ($c_j\ge 0.80$) unisolated at horizon $T=48$.
+The objective is $\max_\pi E_\pi[\sum_{t=1}^{T}r_t]$. Confirmation pays once per host; preventive and containment actions earn their value through avoided future losses. Hidden truth calculates simulator rewards/metrics, not controller features.
+\sect{4. Learned control and temporal ensemble}
+Double DQN separates online action selection from target evaluation~\cite{ddqn}; dueling heads separate state value and action advantages~\cite{dueling}. Joint posterior 64 embeds to 32 ReLU units. Shared host heads take 50 inputs (9 host features, one marginal, two globals, six adjacency entries, 32 joint features), pass through 128/128 ReLU layers, and output four advantages. Mean host embedding (128), globals (2) and joint embedding (32) feed separate 162--128--1 WAIT/value heads. Centering the 25 advantages gives $ Q=V+A-\operatorname{mean}_aA $.
 
-\section*{3. Algorithm: Graph-Dueling Double-DQN}
-Standard MLPs and static heuristics miss \emph{stealth lateral transitions}: when an attacker spreads at step $t$ ($\Delta N_t>0$) but the newly infected host misses the $q_d=0.55$ alarm roll, its Bayesian update from $0.30$ yields $b_{t,j}=0.173$ (versus $0.051$ for clean hosts), falling below heuristic alert thresholds ($0.27\text{--}0.78$) and allowing multi-hop compromise of \emph{Database} ($3$) and \emph{Backup Vault} ($5$) via the bridge hub \emph{App Server} ($2$).
+For up to three retained decision transitions, terminal flag $ d $ and next legal set $\mathcal A'$, $\gamma=1 $ gives
+\begin{align*}
+a^*&=\arg\max_{a\in\mathcal A'}Q_\theta(\xi',a),\\
+y&=\sum_{j=0}^{k-1}R_{t+j}+(1-d)Q_{\bar\theta}(\xi',a^*).
+\end{align*}
+MSE minimizes $ E[(Q_\theta(\xi,a)-y)^2]$. Each $R_i$ sums the actual rewards in its retained transition. Actual forced-WAIT suffix rewards fold into the preceding transition only when the public mask offers WAIT alone; all 48 environment steps execute. Duration-aware targets preserve the return exactly ($\gamma=1 $).
 
-Our \textbf{Topological-Bayesian Graph-Dueling Double-DQN} addresses this via five mechanisms: (1) \textbf{Graph Convolution}: node features $X_t\in\mathbb{R}^{6\times 9}$ propagate across normalized adjacency $\hat{A}=D^{-1/2}(A+I)D^{-1/2}$ via $H=\mathrm{ReLU}(\hat{A}\,\mathrm{ReLU}(X_tW_0)W_1)$; (2) \textbf{Dueling Streams}: fused graph and global features feed separate state-value $V_\theta(s)$ and advantage $A_\theta(s,a)$ heads with \texttt{LayerNorm}; (3) \textbf{Topological-Bayesian Inductive Prior} $\Phi_{\rm TB}(s,a)$: a vectorized tensor module identifying stealth lateral hits ($\Delta N_t>0\wedge b_{t,i}\in[0.165,0.185]$), prioritizing criticality-weighted isolation ($c_i+0.5b_{t,i}$) when bridge hubs are threatened, and pacing decoys; (4) \textbf{Zero-False-Isolation Safety Shield}: suppresses unverified isolations when $\neg\text{confirmed}_i\wedge b_{t,i}<0.70\wedge\neg\text{stealth\_hit}_i$; and (5) \textbf{3-Step Double-DQN + DQfD}: trains across seeds $17,29,43$ ($280$ episodes/seed, $\gamma=0.99$, $n=3$, $\tau=0.005$, Huber + margin loss).
-
-\vspace{2pt}\noindent\includegraphics[width=\linewidth,height=1.35in,keepaspectratio]{../results/training_curve.png}
-\figcap{Fig. 1.}{20-episode moving-average training return across seeds 17, 29, and 43. All seeds surpass the strongest heuristic baseline ($-2.57$) and converge cleanly near zero.}
+Five fresh seeds $ S=\{17,29,43,71,89\}$ each retain fixed episode checkpoints $ E=\{10000,20000\}$:
+\[
+Q_{\rm ens}(\xi,a)=\frac 1{10}\sum_{s\in S}\sum_{e\in E}Q_{s,e}(\xi,a).
+\]
+Deployment takes legal argmax of this uniform mean. It is ONE fixed ensemble from five training runs, not ten independent replicas. No reward decoding, teacher, hand-added Q prior or strategic shield chooses its actions. Control is approximate; the filter's exactness does not imply optimal control.
 \end{minipage}
-
 \newpage
-\noindent\begin{minipage}[t]{0.484\textwidth}
-\small
-\section*{4. Experimental Evaluation \& Baselines}
-We evaluate all three trained DQN checkpoints ($90$ runs) on $30$ held-out scenario seeds ($300000+97i$) against four domain baselines---\textbf{Alert Responder}, \textbf{Threshold Defense}, \textbf{Patch Priority}, and \textbf{Random Legal}---plus an RL comparator (\textbf{Tabular Q-Learning}) and an architectural ablation (\textbf{Dueling DQN w/o Stealth Prior}).
+\begin{minipage}[t]{.482\textwidth}\vspace{0pt}\small
+\sect{5. Training and evaluation protocol}
+Architecture, loss and aggregation were selected on 200 development scenarios $ 600000+101i $ using development seeds 101/202. All five fresh 20k-episode runs and both fixed checkpoint times were retained without final-test selection. They execute 4.8 million environment steps and 1,719,035 optimizer updates. Settings are Adam $ 3\times 10^{-4}$, batch 128, replay 30,000, warm-up 1,000 replay entries, episode-end updates, target copy every 500 updates and gradient-norm clip 10. Epsilon falls $ 1\to.02 $ over 240,000 actual steps. \TrainingCompute
 
-\begin{center}\footnotesize
-\setlength{\tabcolsep}{2.2pt}
-\begin{tabular}{lrrrrr}
+\includegraphics[width=\linewidth]{assets/training_measured.pdf}
+\captext{\textbf{Fig. 1.} Actual exploration-policy training returns: 500-episode moving means for five independent runs (gray), with their average (blue). These are descriptive traces, not confidence intervals or final ensemble performance.}
+
+Final testing uses 10,000 fresh scenarios $ 900000000+103i $, $ i=0,\ldots,9999 $, disjoint from known training/development/history. Configuration, checkpoints, comparison family and sample size froze before access. Shared exogenous noise pairs all policies by scenario. \InferenceMethod
+
+\sect{6. Primary return and trade-offs}
+\PrimaryResults
+
+\SecondaryResults
+
+Raw episodes, all family/fixed-checkpoint contrasts, per-seed metrics, source hashes and frozen manifests accompany the code. No legacy score from a different reward is used as a numerical benchmark.
+\end{minipage}\hfill
+\begin{minipage}[t]{.482\textwidth}\vspace{0pt}\small
+\includegraphics[width=\linewidth]{assets/comparison_measured.pdf}
+\captext{\textbf{Fig. 2.} The six most limiting simultaneous return-difference bounds in the prespecified family. Points are ensemble minus comparator mean return; bars are Bonferroni-adjusted bootstrap intervals over all 55 primary contrasts, using 50,000 resamples and 10,000 shared scenarios. The ensemble's trained members are fixed.}
+
+\begin{center}\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lrrrr}
 \toprule
-\textbf{Policy / Algorithm} & \textbf{Return} & \textbf{Critical} & \textbf{Uncont.} & \textbf{Delay} & \textbf{False Iso.} \\
+\textbf{Policy} & \textbf{Return} & \textbf{Crit.} & \textbf{False iso.} & \textbf{Conf.\%}\\
 \midrule
-\textbf{Graph-Dueling DQN (Ours)} & $\mathbf{-0.360}$ & $\mathbf{0.111}$ & $\mathbf{0.044}$ & $\mathbf{0.922}$ & $\mathbf{0.000}$ \\
-Dueling DQN (w/o Stealth) & $-0.955$ & $0.167$ & $0.100$ & $0.085$ & $\mathbf{0.000}$ \\
-Alert Responder (Heuristic) & $-2.573$ & $0.233$ & $0.433$ & $1.469$ & $\mathbf{0.000}$ \\
-Tabular Q-Learning (RL Base) & $-3.018$ & $0.133$ & $0.256$ & $39.504$ & $0.600$ \\
-Threshold Defense (Heuristic) & $-3.990$ & $0.400$ & $0.500$ & $1.593$ & $\mathbf{0.000}$ \\
-Patch Priority (Baseline) & $-13.870$ & $0.933$ & $2.100$ & $1.153$ & $\mathbf{0.000}$ \\
-Random Legal (Baseline) & $-15.583$ & $0.667$ & $1.933$ & $3.098$ & $1.200$ \\
+\MetricTable
 \bottomrule
 \end{tabular}
 \end{center}
-\vspace{1pt}
-As verified in \texttt{results/summary.csv} and \texttt{ablation\_summary.csv}, \textbf{Graph-Dueling DQN achieves first place across all core metrics}:
-\begin{itemize}\setlength{\itemsep}{0.5pt}\setlength{\parskip}{0pt}\setlength{\topsep}{1.5pt}
-\item \textbf{Return \& Stability:} Outperforms Alert Responder by $+2.21$ return ($-0.360\pm 2.672$ vs.\ $-2.573\pm 6.371$), cutting variance by $58\%$.
-\item \textbf{Critical Asset Protection:} Cuts critical compromises ($c_i\ge 0.80$) by \textbf{52\%} vs.\ Alert Responder ($0.111$ vs.\ $0.233$) and \textbf{72\%} vs.\ Threshold Defense ($0.400$).
-\item \textbf{End-of-Episode Containment:} Reduces uncontained compromises at $T=48$ by \textbf{90\%} ($0.044$ vs.\ $0.433$ for Alert Responder).
-\item \textbf{Zero False Isolations:} Eliminates false quarantines ($0.000\pm 0.000$) while achieving $1.289$ successful isolations per episode.
-\end{itemize}
+\captext{\textbf{Table 1.} Final means. Critical hosts ever compromised and clean-host isolations are counts/episode. Confirmation is the mean within-episode fraction of infected hosts explicitly diagnosed. Secondary intervals are exploratory; complete estimates accompany the raw results.}
 
-\vspace{2pt}\noindent\includegraphics[width=\linewidth,height=1.36in,keepaspectratio]{../results/critical_compromises.png}
-\figcap{Fig. 2.}{Held-out critical-host compromises per episode (mean $\pm$ SD, clipped at $0$). Graph-Dueling DQN reduces critical breaches by $52\%$ over the best heuristic.}
+\sect{7. Fair comparison and scope}
+The 22 comparator methods include previous corrected RL agents, original rules and tabular encoding, matched 20k-episode graph-dueling retraining (learned-only and prior/shield hybrid), temporal/final ensembles and a diagnostic threshold rule tuned over 40 validation configurations. Original checkpoints are clearly marked domain transfers: their lawful 58D adapter uses causal posterior marginals and public inspection history, with the unavailable privileged new-infection-count channel fixed to 0. Transfer and retraining are distinct.
 
-\vspace{2pt}\noindent\includegraphics[width=\linewidth,height=1.36in,keepaspectratio]{../results/uncontained_at_end.png}
-\figcap{Fig. 3.}{Uncontained compromises at episode end ($T=48$). Graph-Dueling DQN contains $95.6\%$ of all incidents ($0.044$ uncontained).}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.484\textwidth}
-\small
-\section*{5. Ablation \& Robustness Analysis}
-\textbf{Ablation Analysis.} Removing the stealth-transition belief prior (\emph{Dueling DQN w/o Stealth Prior}) degrades mean return from $-0.360$ to $-0.955$ and increases critical compromises by $50\%$ ($0.111\to 0.167$), demonstrating the value of coupling $\Delta N_t$ with Bayesian posterior filtering. Replacing our Graph-Dueling network with discretized \emph{Tabular Q-Learning} degrades return to $-3.018$ and incurs $0.600$ false isolations per episode due to state-aggregation aliasing across the $58$-dimensional belief space.
+For infected host $ i $, censored confirmation delay is $\min(t_i^{\rm confirm},T)-t_i^{\rm infection}$, with $\infty $ for unconfirmed hosts. Isolated but unconfirmed infections remain censored, so containment need not imply diagnosis. Coverage accompanies this measure. Controls with zero false isolation preclude a strict win on every metric.
 
-\textbf{Attack-Rate Sensitivity.} To test out-of-distribution generalization without retraining, we evaluate the fixed checkpoints across $20$ unseen scenarios at base attack probabilities $p_{\rm base}\in\{0.18, 0.23, 0.28\}$ (\texttt{results/sensitivity\_summary.csv}):
-\begin{center}\footnotesize
-\setlength{\tabcolsep}{3.2pt}
-\begin{tabular}{llrrr}
-\toprule
-\textbf{Condition} & \textbf{Policy} & \textbf{Return} & \textbf{Critical} & \textbf{Uncont.} \\
-\midrule
-Low ($p=0.18$) & \textbf{Graph-Dueling DQN} & $\mathbf{+0.228}$ & $\mathbf{0.050}$ & $\mathbf{0.000}$ \\
- & Alert Responder & $-1.387$ & $0.200$ & $0.200$ \\
- & Threshold Defense & $-1.946$ & $0.250$ & $0.250$ \\
-\midrule
-Base ($p=0.23$) & \textbf{Graph-Dueling DQN} & $\mathbf{+0.365}$ & $\mathbf{0.050}$ & $\mathbf{0.000}$ \\
- & Alert Responder & $-1.052$ & $0.050$ & $0.250$ \\
- & Threshold Defense & $-2.644$ & $0.250$ & $0.300$ \\
-\midrule
-High ($p=0.28$) & \textbf{Graph-Dueling DQN} & $\mathbf{-0.369}$ & $\mathbf{0.100}$ & $\mathbf{0.000}$ \\
- & Alert Responder & $-5.786$ & $0.400$ & $0.750$ \\
- & Threshold Defense & $-5.783$ & $0.500$ & $0.650$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-Under high attack stress ($p=0.28$), heuristic defenders suffer severe cascading breaches ($0.400\text{--}0.500$ critical compromises; $-5.78$ return), whereas \textbf{Graph-Dueling DQN} limits critical compromises to $\mathbf{0.100}$ and achieves $\mathbf{0.000}$ uncontained breaches across all three regimes.
+The known synthetic model and $2^N$-state filter limit scalability and external validity. The shared head has restricted cross-host deployment context; several training/representation changes occur together, so results do not isolate one component's causal effect. Only one temporal ensemble is deployed: uncertainty is conditional on its fixed members, not variability across independently trained ensembles. Results establish a bounded comparison, not universal dominance or real-network effectiveness.
 
-\vspace{2pt}\noindent\includegraphics[width=\linewidth,height=1.36in,keepaspectratio]{../results/sensitivity_critical_compromises.png}
-\figcap{Fig. 4.}{Out-of-distribution robustness across attack probabilities $p_{\rm base}\in\{0.18,0.23,0.28\}$ without retraining.}
-
-\section*{6. Limitations \& Reproducibility}
-SentinelRL uses a synthetic 6-node topology, factorized Bayesian belief updates, and calibrated design weights rather than live network traffic or adaptive human adversaries. All source code, trained PyTorch checkpoints (\texttt{models/sentinel\_dqn\_seed*.pt}), unit tests (\texttt{python -m pytest -q}, 8 passed), and one-command reproduction (\texttt{python run\_all.py -{}-episodes 280 -{}-eval-episodes 30}) are included in the repository. By combining topological graph message passing, dueling value decomposition, and stealth-transition Bayesian filtering, SentinelRL demonstrates that structured deep RL decisively outperforms hand-crafted security heuristics under strict operational budgets.
-\end{minipage}
-
-\newpage
-\begin{center}{\large\bfseries References}\end{center}
-\noindent\begin{minipage}[t]{0.484\textwidth}\small
-\begin{enumerate}
-\item Microsoft. \emph{CyberBattleSim: An experimentation and research platform for automated agents in abstract simulated network environments}. 2021. \url{https://github.com/microsoft/CyberBattleSim}
-\item ``MininetGym: A modular SDN-based simulation environment for reinforcement learning in cybersecurity.'' \emph{SoftwareX}, vol. 31, 102312, 2025. DOI: \url{https://doi.org/10.1016/j.softx.2025.102312}.
-\item Z. Wang et al. ``Dueling Network Architectures for Deep Reinforcement Learning.'' \emph{Proc. ICML}, pp. 1995--2003, 2016.
-\end{enumerate}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.484\textwidth}\small
-\begin{enumerate}\setcounter{enumi}{3}
-\item S. Vyas, V. Mavroudis, and P. Burnap. ``Towards the Deployment of Realistic Autonomous Cyber Network Defence: A Systematic Review.'' \emph{ACM Computing Surveys}, vol. 58, no. 1, 2025. DOI: \url{https://doi.org/10.1145/3729213}.
-\item ``Multi-Objective Reinforcement Learning for Automated Resilient Cyber Defence.'' \emph{Applied AI Letters}, 2025. DOI: \url{https://doi.org/10.1002/ail2.70007}.
-\item T. Hester et al. ``Deep Q-learning from Demonstrations.'' \emph{Proc. AAAI}, pp. 3223--3230, 2018.
-\end{enumerate}
+\vspace{2pt}{\footnotesize
+\begin{thebibliography}{3}
+\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
+\bibitem{pomdp} L.~P.~Kaelbling, M.~L.~Littman and A.~R.~Cassandra. Planning and acting in partially observable stochastic domains. \emph{Artificial Intelligence} 101:99--134, 1998. \href{https://people.csail.mit.edu/lpk/papers/aij 98-pomdp.pdf}{Author full text}.
+\bibitem{ddqn} H.~van Hasselt, A.~Guez and D.~Silver. Deep reinforcement learning with Double Q-learning. \emph{AAAI}, 2016. \href{https://arxiv.org/abs/1509.06461}{arXiv:1509.06461}.
+\bibitem{dueling} Z.~Wang et al. Dueling network architectures for deep reinforcement learning. \emph{ICML}, PMLR 48:1995--2003, 2016. \href{https://proceedings.mlr.press/v 48/wangf 16.html}{Publisher}.
+\end{thebibliography}}
 \end{minipage}
 \end{document}

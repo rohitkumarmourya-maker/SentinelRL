@@ -1,0 +1,20 @@
+{
+  "BENCHMARK_README.md": "c662adcf8b446dd414a26bce499b6eb3e6f3e64bbf255fc5c30b541b346bffbd",
+  "reproduce_original.py": "4a6ed6433c569add8a71773db391e2397991653f08de4c341cd66db4b922973c",
+  "reproduction/ablation_episodes.csv": "cf9c33125eb02dda50e83f45995e80843d255dbb93564849e8773541753678b1",
+  "reproduction/ablation_summary.csv": "33aca972a1ecc07d21060c9f58e552d94ecae65ca4d0ad71ffd967815d297137",
+  "reproduction/benchmark.csv": "9c0abd879ffc59fa804536373574e40f41bef107ccfee0cfda5708301f06d7ad",
+  "reproduction/evaluation_episodes.csv": "061510d537597b22af202141b42fd248e62a49fe2ce910e7c0cb1e3b69e10007",
+  "reproduction/evaluation_matrix.csv": "0e4b531f0949bfacbbbd01cb9008a50005a07cd8f6571f2c4c0ce3a435bf849c",
+  "reproduction/metadata.json": "863737a800508642b0722a3a448dbe26bd4090ca7a8473e8797fcb400899a5dc",
+  "reproduction/original_method_summary.csv": "5e6afbad4cf8c684625365285b990d38c134dc5aaef05fedeeecf51ad5ecc250",
+  "reproduction/per_seed_metrics.csv": "1bbe67447d8289b598b16b42ea338b51cd7eb6ef248fd80db67c902f300ed301",
+  "reproduction/per_seed_summary.csv": "c43d97fea86f155d2be16d963e8a3767b3ce56921ead7160a058cb6858e51831",
+  "reproduction/reported_ablation_summary.csv": "33aca972a1ecc07d21060c9f58e552d94ecae65ca4d0ad71ffd967815d297137",
+  "reproduction/reported_summary.csv": "72e5516edc6cd873ab6e43ec7970bb03cc98fe9f8a7d3d4403a7cf06553b523e",
+  "reproduction/reported_vs_reproduced.csv": "867f380bf5e5f3aac882beae89de7217f4b758d520ab9be1b96f123057fcdde4",
+  "reproduction/scenario_averaged_metrics.csv": "de428145a7055a326d4905210346f9178b97bb7c958f4674127b22b667e47b7d",
+  "reproduction/summary.csv": "72e5516edc6cd873ab6e43ec7970bb03cc98fe9f8a7d3d4403a7cf06553b523e",
+  "reproduction/summary.json": "111040db28689233dbe9e03c2981ac71e9fcfafc3de9bd4f26dd9ebba7d0a87a",
+  "summarize_benchmark.py": "0a461b225641f0c91cfdc6e9b637258e6696197e1396cb4fc5acbb5af2dee01f"
+}

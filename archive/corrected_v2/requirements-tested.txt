@@ -1,0 +1,6 @@
+# Actual recorded CPU run and35passing tests used these versions on Python3.12.5.
+# Fresh virtual-environment installation was not repeated during delivery.
+numpy==2.2.6
+matplotlib==3.9.2
+torch==2.8.0
+pytest==9.0.3

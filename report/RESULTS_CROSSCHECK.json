@@ -1,0 +1,11 @@
+{
+  "rows_streamed": 520000,
+  "distinct_policy_seed_rows": 52,
+  "complete_scenarios_per_row": 10000,
+  "summary_means_recomputed": 342,
+  "paired_return_means_recomputed": 55,
+  "positive_adjusted_comparisons": 54,
+  "exception": "tuned_belief_threshold",
+  "no_invalid_or_budget_violations": true,
+  "protocol_sha256": "ad11c25a5389477c4351c11047b89fb48aca57f81b732b30795a77646bbccecf"
+}

@@ -1,0 +1,12 @@
+{
+  "policy": "champion_temporal_ensemble",
+  "model_seeds": [
+    0
+  ],
+  "scenario_first_index": 5000,
+  "scenario_stop_index": 6000,
+  "rows": 1000,
+  "elapsed_seconds": 27.853331415997673,
+  "sha256": "e6f57a46dd0e72e0045a3badcc15e0ed5c545bbcee6e7a65208e31a086229337",
+  "created_utc": "2026-10-26T13:00:11.998340+00:00"
+}

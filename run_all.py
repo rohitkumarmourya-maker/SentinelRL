@@ -1,12 +1,7 @@
-"""One-command end-to-end experiment runner."""
-import argparse
-from src.experiment import run_all
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--episodes", type=int, default=280, help="Training episodes per DQN seed")
-    parser.add_argument("--eval-episodes", type=int, default=30, help="Held-out evaluation episodes per baseline")
-    args = parser.parse_args()
-    if args.episodes < 5 or args.eval_episodes < 5:
-        parser.error("Use at least 5 training and 5 evaluation episodes for a meaningful smoke run")
-    run_all(episodes=args.episodes, eval_episodes=args.eval_episodes)
+#!/usr/bin/env python3
+"""Show the current champion entry points; no accidental historical-v2 pipeline."""
+print('Trained demonstration: python demo.py --steps 48')
+print('Evidence/replay: python scripts/verify_champion.py --replay')
+print('Fresh training reproduction: python train.py --execute-model-run --name reproduction_champion')
+print('Quick bundled-policy reevaluation: python evaluate.py --execute-model-run --output runs/quick-check')
+print('Full fixed benchmark reproduction: python evaluate.py --execute-model-run --full-frozen-test --workers 8 --output runs/full-check')

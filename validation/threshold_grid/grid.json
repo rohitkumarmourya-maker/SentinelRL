@@ -1,0 +1,218 @@
+{
+  "scenarios": 200,
+  "seed_formula": "600000+101*i",
+  "primary_selection": "maximum mean episodic return; ties prefer first prespecified config",
+  "environment": {
+    "horizon": 48,
+    "response_budget": 6,
+    "attack_base_probability": 0.23,
+    "alert_sensitivity": 0.55,
+    "false_positive_rate": 0.08,
+    "patch_multiplier": 0.2,
+    "decoy_multiplier": 0.25,
+    "alert_ema_alpha": 0.35
+  },
+  "configurations": [
+    {
+      "isolation_threshold": 0.5,
+      "inspection_threshold": 1.1,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.5,
+      "inspection_threshold": 1.1,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.5,
+      "inspection_threshold": 0.2,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.5,
+      "inspection_threshold": 0.2,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.5,
+      "inspection_threshold": 0.4,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.5,
+      "inspection_threshold": 0.4,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.5,
+      "inspection_threshold": 0.6,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.5,
+      "inspection_threshold": 0.6,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.65,
+      "inspection_threshold": 1.1,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.65,
+      "inspection_threshold": 1.1,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.65,
+      "inspection_threshold": 0.2,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.65,
+      "inspection_threshold": 0.2,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.65,
+      "inspection_threshold": 0.4,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.65,
+      "inspection_threshold": 0.4,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.65,
+      "inspection_threshold": 0.6,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.65,
+      "inspection_threshold": 0.6,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.8,
+      "inspection_threshold": 1.1,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.8,
+      "inspection_threshold": 1.1,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.8,
+      "inspection_threshold": 0.2,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.8,
+      "inspection_threshold": 0.2,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.8,
+      "inspection_threshold": 0.4,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.8,
+      "inspection_threshold": 0.4,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.8,
+      "inspection_threshold": 0.6,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.8,
+      "inspection_threshold": 0.6,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.9,
+      "inspection_threshold": 1.1,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.9,
+      "inspection_threshold": 1.1,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.9,
+      "inspection_threshold": 0.2,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.9,
+      "inspection_threshold": 0.2,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.9,
+      "inspection_threshold": 0.4,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.9,
+      "inspection_threshold": 0.4,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.9,
+      "inspection_threshold": 0.6,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.9,
+      "inspection_threshold": 0.6,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.98,
+      "inspection_threshold": 1.1,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.98,
+      "inspection_threshold": 1.1,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.98,
+      "inspection_threshold": 0.2,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.98,
+      "inspection_threshold": 0.2,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.98,
+      "inspection_threshold": 0.4,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.98,
+      "inspection_threshold": 0.4,
+      "protection": true
+    },
+    {
+      "isolation_threshold": 0.98,
+      "inspection_threshold": 0.6,
+      "protection": false
+    },
+    {
+      "isolation_threshold": 0.98,
+      "inspection_threshold": 0.6,
+      "protection": true
+    }
+  ],
+  "final_test_used": false
+}

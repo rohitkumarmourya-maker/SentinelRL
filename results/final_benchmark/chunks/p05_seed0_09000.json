@@ -1,0 +1,12 @@
+{
+  "policy": "previous_alert_rule",
+  "model_seeds": [
+    0
+  ],
+  "scenario_first_index": 9000,
+  "scenario_stop_index": 10000,
+  "rows": 1000,
+  "elapsed_seconds": 1.8849258750014997,
+  "sha256": "f22b282490593d8c448e995e1698b35266e61fc8d42afdaf5b81266a132b505d",
+  "created_utc": "2026-10-26T13:01:26.492255+00:00"
+}

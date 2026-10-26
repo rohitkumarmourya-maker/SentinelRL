@@ -1,314 +1,210 @@
-"""SentinelRL: a small, synthetic defensive cyber-range POMDP.
+"""Standalone finite-horizon cyber-defense POMDP; no real network operations.
 
-This is a teaching simulator. It does not generate packets, exploit real systems,
-or connect to a network. All attacks are abstract stochastic transitions.
+Policies receive only observation and action_mask(). The latent simulator state and
+privileged diagnostics in info are for reward/evaluation, never policy inputs.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import Any
 import numpy as np
 
 HOSTS = ("Edge Gateway", "Web Server", "App Server", "Database", "Staff Laptop", "Backup Vault")
-N_HOSTS = len(HOSTS)
-WAIT = 0
-INSPECT_BASE = 1
-PATCH_BASE = 1 + N_HOSTS
-ISOLATE_BASE = 1 + 2 * N_HOSTS
-DECOY_BASE = 1 + 3 * N_HOSTS
-N_ACTIONS = 1 + 4 * N_HOSTS
-FEATURES_PER_HOST = 9
-OBS_DIM = N_HOSTS * FEATURES_PER_HOST + 4
-
-# Undirected reachability graph. This is an illustrative topology, not a real network.
+N_HOSTS = 6
+WAIT, INSPECT_BASE, PATCH_BASE, ISOLATE_BASE, DECOY_BASE = 0, 1, 7, 13, 19
+N_ACTIONS, FEATURES_PER_HOST, OBS_DIM = 25, 9, 56
 EDGES = ((0, 1), (1, 2), (2, 3), (1, 4), (4, 2), (3, 5), (2, 5))
-ADJ = np.zeros((N_HOSTS, N_HOSTS), dtype=np.float32)
+ADJ = np.zeros((N_HOSTS, N_HOSTS), dtype=bool)
 for _a, _b in EDGES:
-    ADJ[_a, _b] = ADJ[_b, _a] = 1.0
+    ADJ[_a, _b] = ADJ[_b, _a] = True
+VULNERABILITY = np.array([.40, .68, .58, .82, .76, .48], dtype=np.float32)
+CRITICALITY = np.array([.45, .62, .80, 1.00, .52, .96], dtype=np.float32)
+CRITICAL = CRITICALITY >= .8
+OBS_FEATURES = ("alert", "alert_ema", "inspection_result", "inspection_age", "vulnerability", "criticality", "patched", "isolated", "decoy")
 
-VULNERABILITY = np.array([0.40, 0.68, 0.58, 0.82, 0.76, 0.48], dtype=np.float32)
-CRITICALITY = np.array([0.45, 0.62, 0.80, 1.00, 0.52, 0.96], dtype=np.float32)
 
 @dataclass(frozen=True)
 class EnvConfig:
     horizon: int = 48
     response_budget: int = 6
-    attack_base_probability: float = 0.23
-    alert_sensitivity: float = 0.55
-    false_positive_rate: float = 0.08
+    attack_base_probability: float = .23
+    alert_sensitivity: float = .55
+    false_positive_rate: float = .08
+    patch_multiplier: float = .20
+    decoy_multiplier: float = .25
+    alert_ema_alpha: float = .35
+
+    def __post_init__(self):
+        if self.horizon < 1 or self.response_budget < 1:
+            raise ValueError("horizon and response_budget must be positive")
+        for name in ("attack_base_probability", "alert_sensitivity", "false_positive_rate", "patch_multiplier", "decoy_multiplier", "alert_ema_alpha"):
+            if not 0 <= getattr(self, name) <= 1:
+                raise ValueError(f"{name} must lie in [0,1]")
+
 
 class SentinelEnv:
-    """A partially observable MDP with an explicit noisy belief/telemetry vector."""
+    """Six-host POMDP with explicit observation history and action-independent noise.
+
+    Hidden state: compromised hosts and first-event accounting. Public state:
+    time, budget, own defense flags, noisy alerts and explicit inspection history.
+    An inspection is a perfect snapshot before this step's spread; it may become
+    stale. No unseen infection changes that history or the availability mask.
+    """
     def __init__(self, seed: int | None = None, config: EnvConfig | None = None):
         self.config = config or EnvConfig()
-        self.rng = np.random.default_rng(seed)
-        self.reset(seed=seed)
+        self.reset(seed)
 
     @property
-    def observation_space_shape(self) -> tuple[int, ...]:
+    def observation_space_shape(self):
         return (OBS_DIM,)
 
     @property
-    def action_space_n(self) -> int:
+    def action_space_n(self):
         return N_ACTIONS
 
     def reset(self, seed: int | None = None) -> tuple[np.ndarray, dict[str, Any]]:
-        if seed is not None:
-            self.rng = np.random.default_rng(seed)
-        self.t = 0
-        self.budget = int(self.config.response_budget)
+        rng = np.random.default_rng(seed)
+        self.seed = seed
+        # Draw complete exogenous random fields irrespective of chosen actions.
+        self.entry_uniform = float(rng.random())
+        self.spread_uniforms = rng.random((self.config.horizon, N_HOSTS, N_HOSTS))
+        self.sensor_uniforms = rng.random((self.config.horizon + 1, N_HOSTS))
+        self.t, self.budget = 0, self.config.response_budget
         self.compromised = np.zeros(N_HOSTS, dtype=bool)
+        self.compromised[0 if self.entry_uniform < .62 else 4] = True
         self.patched = np.zeros(N_HOSTS, dtype=bool)
         self.isolated = np.zeros(N_HOSTS, dtype=bool)
         self.decoy = np.zeros(N_HOSTS, dtype=bool)
-        self.inspected = np.zeros(N_HOSTS, dtype=bool)
-        self.confirmed = np.zeros(N_HOSTS, dtype=bool)
-        self.belief = np.full(N_HOSTS, 0.10, dtype=np.float32)
+        self.inspection_result = np.full(N_HOSTS, -1, dtype=np.int8)
+        self.inspection_time = np.full(N_HOSTS, -1, dtype=np.int32)
+        self.first_compromise_time = np.where(self.compromised, 0, -1).astype(np.int32)
+        self.first_confirmation_time = np.full(N_HOSTS, -1, dtype=np.int32)
         self.alert = np.zeros(N_HOSTS, dtype=bool)
-        # An attacker begins with a foothold on either the public gateway or a staff laptop.
-        entry = int(self.rng.choice([0, 4], p=[0.62, 0.38]))
-        self.compromised[entry] = True
-        self.belief[entry] = 0.22
-        self.inspected[:] = False
-        self.confirmed[:] = False
-        self.total_compromises = 1
-        self.critical_compromises = int(CRITICALITY[entry] >= 0.8)
-        self.first_compromise_time = np.full(N_HOSTS, -1, dtype=np.int32)
-        self.first_compromise_time[entry] = 0
-        self.first_detection_time = np.full(N_HOSTS, -1, dtype=np.int32)
-        self.false_isolations = 0
-        self.successful_isolations = 0
-        self.action_costs = 0
-        self.detected_count = 0
-        self.newly_compromised_last = 1
-        self.episode_return = 0.0
-        self._step_compromise_events = [entry]
-        return self._observation(), {"entry_host": entry, "action_mask": self.action_mask()}
+        self.alert_ema = np.zeros(N_HOSTS, dtype=np.float32)
+        self.false_isolations = self.successful_isolations = self.action_costs = 0
+        self.invalid_actions = 0
+        self.action_counts = np.zeros(N_ACTIONS, dtype=np.int32)
+        self.episode_return = 0.
+        self._sense()
+        return self._observation(), {"action_mask": self.action_mask()}
 
     def action_mask(self) -> np.ndarray:
-        """True indicates an available action; WAIT is always available."""
         mask = np.zeros(N_ACTIONS, dtype=bool)
         mask[WAIT] = True
-        if self.budget <= 0:
-            return mask
-        for i in range(N_HOSTS):
-            # A newly generated alarm or new telemetry makes re-inspection useful again.
-            if (not self.inspected[i]) or self.alert[i]:
-                mask[INSPECT_BASE + i] = True
-            if not self.patched[i] and not self.isolated[i]:
-                mask[PATCH_BASE + i] = True
-            if not self.isolated[i]:
-                mask[ISOLATE_BASE + i] = True
-            if not self.decoy[i] and not self.isolated[i]:
-                mask[DECOY_BASE + i] = True
+        if self.budget > 0:
+            available = ~self.isolated
+            mask[INSPECT_BASE:PATCH_BASE] = available
+            mask[PATCH_BASE:ISOLATE_BASE] = available & ~self.patched
+            mask[ISOLATE_BASE:DECOY_BASE] = available
+            mask[DECOY_BASE:] = available & ~self.decoy
         return mask
 
     def _observation(self) -> np.ndarray:
-        # Per host: belief, alarm, inspected, confirmed compromised, vulnerability,
-        # criticality, patched, isolated, decoy. True attack state is never exposed.
-        block = np.stack([
-            self.belief,
-            self.alert.astype(np.float32),
-            self.inspected.astype(np.float32),
-            self.confirmed.astype(np.float32) * self.inspected.astype(np.float32),
-            VULNERABILITY,
-            CRITICALITY,
-            self.patched.astype(np.float32),
-            self.isolated.astype(np.float32),
-            self.decoy.astype(np.float32),
-        ], axis=1).reshape(-1)
-        global_features = np.array([
-            self.budget / max(1, self.config.response_budget),
-            self.t / max(1, self.config.horizon),
-            self.detected_count / N_HOSTS,
-            self.newly_compromised_last / N_HOSTS,
-        ], dtype=np.float32)
-        result = np.concatenate([block.astype(np.float32), global_features]).astype(np.float32)
-        assert result.shape == (OBS_DIM,)
-        return result
+        # Each term below is known to the defender. Do not add latent metrics here.
+        age = np.where(self.inspection_time >= 0, self.t - self.inspection_time, self.config.horizon)
+        nodes = np.stack((self.alert, self.alert_ema, (self.inspection_result + 1) / 2,
+                          age / self.config.horizon, VULNERABILITY, CRITICALITY,
+                          self.patched, self.isolated, self.decoy), axis=1)
+        globals_ = [self.budget / self.config.response_budget, self.t / self.config.horizon]
+        return np.concatenate((nodes.reshape(-1), globals_)).astype(np.float32)
 
-    def _observe_alarms(self) -> tuple[int, int]:
-        true_alerts = 0
-        false_alerts = 0
-        old_alerts = self.alert.copy()
-        for i in range(N_HOSTS):
-            if self.isolated[i]:
-                self.alert[i] = False
-                continue
-            probability = self.config.alert_sensitivity if self.compromised[i] else self.config.false_positive_rate
-            self.alert[i] = bool(self.rng.random() < probability)
-            if self.alert[i] and not old_alerts[i]:
-                if self.compromised[i]:
-                    true_alerts += 1
-                    if self.first_detection_time[i] < 0:
-                        self.first_detection_time[i] = self.t
-                        self.detected_count += 1
-                else:
-                    false_alerts += 1
-            # Approximate per-host Bayes filter. This is a compact belief state rather than
-            # a claim of exact inference over the coupled network process.
-            prior = float(np.clip(self.belief[i], 0.01, 0.99))
-            qd, qf = self.config.alert_sensitivity, self.config.false_positive_rate
-            if self.alert[i]:
-                post = prior * qd / max(1e-8, prior * qd + (1 - prior) * qf)
-            else:
-                post = prior * (1 - qd) / max(1e-8, prior * (1 - qd) + (1 - prior) * (1 - qf))
-            self.belief[i] = float(np.clip(post, 0.01, 0.99))
-        return true_alerts, false_alerts
+    def _sense(self) -> None:
+        probabilities = np.where(self.compromised, self.config.alert_sensitivity, self.config.false_positive_rate)
+        self.alert = (self.sensor_uniforms[self.t] < probabilities) & ~self.isolated
+        alpha = self.config.alert_ema_alpha
+        self.alert_ema = ((1 - alpha) * self.alert_ema + alpha * self.alert).astype(np.float32)
 
-    def _spread_attacks(self) -> tuple[list[int], int]:
-        newly = []
-        decoy_triggers = 0
-        # Snapshot attackers so newly compromised nodes start spreading next step.
-        attackers = np.where(self.compromised & ~self.isolated)[0].tolist()
-        for source in attackers:
-            for target in np.where(ADJ[source] > 0)[0].tolist():
-                if self.compromised[target] or self.isolated[target]:
-                    continue
-                p = self.config.attack_base_probability * float(VULNERABILITY[target])
-                if self.patched[target]:
-                    p *= 0.16
-                if self.decoy[target]:
-                    p *= 0.10
-                # Lateral movement is stochastic and abstract; no actual exploit executes.
-                if self.rng.random() < p:
-                    if self.decoy[target]:
-                        decoy_triggers += 1
-                        self.alert[target] = True
-                        self.belief[target] = max(self.belief[target], 0.75)
-                    else:
-                        self.compromised[target] = True
-                        self.first_compromise_time[target] = self.t
-                        self.belief[target] = max(self.belief[target], 0.30)
-                        self.inspected[target] = False
-                        self.confirmed[target] = False
-                        newly.append(target)
-        return newly, decoy_triggers
+    def _spread(self) -> np.ndarray:
+        active_sources = self.compromised & ~self.isolated
+        susceptible = ~self.compromised & ~self.isolated
+        probability = self.config.attack_base_probability * VULNERABILITY
+        probability = probability * np.where(self.patched, self.config.patch_multiplier, 1.)
+        probability = probability * np.where(self.decoy, self.config.decoy_multiplier, 1.)
+        attempts = (self.spread_uniforms[self.t] < probability[None, :])
+        attempts &= ADJ & active_sources[:, None] & susceptible[None, :]
+        return attempts.any(axis=0)  # simultaneous; new attackers spread next step
 
     def step(self, action: int) -> tuple[np.ndarray, float, bool, bool, dict[str, Any]]:
-        if not isinstance(action, (int, np.integer)) or action < 0 or action >= N_ACTIONS:
+        if self.t >= self.config.horizon:
+            raise RuntimeError("episode ended; reset before stepping")
+        if isinstance(action, bool) or not isinstance(action, (int, np.integer)) or not 0 <= action < N_ACTIONS:
             raise ValueError(f"action must be an integer in [0,{N_ACTIONS - 1}]")
-        pre_mask = self.action_mask()
-        invalid = not bool(pre_mask[action])
-        reward = 0.0
-        inspected_true = inspected_false = 0
-        isolated_true = isolated_false = 0
-        used_budget = 0
+        terms = {key: 0. for key in ("action_cost", "invalid", "first_confirmation", "new_compromise", "active_compromise", "undetected_compromise", "false_isolation", "clean_isolation_downtime", "terminal_critical")}
+        invalid = not self.action_mask()[action]
+        self.action_counts[action] += 1
         if invalid:
-            reward -= 0.45
+            terms["invalid"] = -.45
+            self.invalid_actions += 1
         elif action != WAIT:
-            used_budget = 1
             self.budget -= 1
             self.action_costs += 1
-            reward -= 0.16
+            terms["action_cost"] = -.16
             if INSPECT_BASE <= action < PATCH_BASE:
-                i = action - INSPECT_BASE
-                self.inspected[i] = True
-                self.confirmed[i] = bool(self.compromised[i])
-                self.alert[i] = False
-                self.belief[i] = 0.97 if self.compromised[i] else 0.02
-                if self.compromised[i] and not self.isolated[i]:
-                    reward += 1.50
-                    inspected_true = 1
-                    if self.first_detection_time[i] < 0:
-                        self.first_detection_time[i] = self.t
-                        self.detected_count += 1
-                elif not self.compromised[i]:
-                    reward -= 0.18
-                    inspected_false = 1
+                host = action - INSPECT_BASE
+                self.inspection_time[host] = self.t
+                self.inspection_result[host] = int(self.compromised[host])
+                if self.compromised[host] and self.first_confirmation_time[host] < 0:
+                    self.first_confirmation_time[host] = self.t
+                    terms["first_confirmation"] = .4
             elif PATCH_BASE <= action < ISOLATE_BASE:
-                i = action - PATCH_BASE
-                self.patched[i] = True
-                # Patching mitigates future entry but does not eradicate an existing attacker.
-                reward += 0.12 * float(CRITICALITY[i])
+                self.patched[action - PATCH_BASE] = True
             elif ISOLATE_BASE <= action < DECOY_BASE:
-                i = action - ISOLATE_BASE
-                self.isolated[i] = True
-                self.alert[i] = False
-                if self.compromised[i]:
-                    reward += 1.10 + 0.55 * float(CRITICALITY[i])
-                    isolated_true = 1
+                host = action - ISOLATE_BASE
+                self.isolated[host] = True
+                if self.compromised[host]:
                     self.successful_isolations += 1
-                    self.belief[i] = max(self.belief[i], 0.90)
                 else:
-                    reward -= 0.65 + 0.85 * float(CRITICALITY[i])
-                    isolated_false = 1
                     self.false_isolations += 1
-            elif DECOY_BASE <= action < N_ACTIONS:
-                i = action - DECOY_BASE
-                self.decoy[i] = True
-                reward += 0.08 * float(VULNERABILITY[i])
-
+                    terms["false_isolation"] = -(.65 + .85 * float(CRITICALITY[host]))
+            else:
+                self.decoy[action - DECOY_BASE] = True
+        new = self._spread()
         self.t += 1
-        newly, decoy_triggers = self._spread_attacks()
-        self._step_compromise_events = newly
-        self.newly_compromised_last = len(newly)
-        if newly:
-            self.total_compromises += len(newly)
-            self.critical_compromises += sum(int(CRITICALITY[i] >= 0.8) for i in newly)
-            reward -= sum(2.0 + 4.0 * float(CRITICALITY[i]) for i in newly)
-        reward += 0.75 * decoy_triggers
-        true_alerts, false_alerts = self._observe_alarms()
-        reward += 0.10 * true_alerts - 0.06 * false_alerts
-        active_compromised = self.compromised & ~self.isolated
-        reward -= float(np.sum(CRITICALITY[active_compromised])) * 0.16
-        if self.t >= self.config.horizon:
-            reward -= 1.4 * int(np.sum(self.compromised & ~self.isolated & (CRITICALITY >= 0.8)))
-        terminated = self.t >= self.config.horizon
-        truncated = False
-        self.episode_return += float(reward)
-        info = {
-            "invalid_action": bool(invalid),
-            "used_budget": used_budget,
-            "new_compromises": len(newly),
-            "compromise_hosts": newly,
-            "critical_compromises_total": self.critical_compromises,
-            "active_compromised_at_end": int(np.sum(self.compromised & ~self.isolated)),
-            "inspected_true": inspected_true,
-            "inspected_false": inspected_false,
-            "isolated_true": isolated_true,
-            "isolated_false": isolated_false,
-            "false_isolations_total": self.false_isolations,
-            "successful_isolations_total": self.successful_isolations,
-            "true_alerts": true_alerts,
-            "false_alerts": false_alerts,
-            "decoy_triggers": decoy_triggers,
-            "remaining_budget": self.budget,
-            "episode_return": self.episode_return,
-        }
+        self.compromised |= new
+        self.first_compromise_time[new] = self.t
+        active = self.compromised & ~self.isolated
+        terms["new_compromise"] = -float(np.sum(2 + 4 * CRITICALITY[new]))
+        terms["active_compromise"] = -.16 * float(CRITICALITY[active].sum())
+        terms["undetected_compromise"] = -.04 * float(CRITICALITY[active & (self.first_confirmation_time < 0)].sum())
+        terms["clean_isolation_downtime"] = -.03 * float(CRITICALITY[self.isolated & ~self.compromised].sum())
+        terminated = self.t == self.config.horizon
         if terminated:
-            info["episode_summary"] = self.summary()
-        info["action_mask"] = self.action_mask()
-        return self._observation(), float(reward), terminated, truncated, info
+            terms["terminal_critical"] = -1.4 * int(np.sum(active & CRITICAL))
+        self._sense()
+        reward = float(sum(terms.values()))
+        self.episode_return += reward
+        info = {"action_mask": self.action_mask(), "reward_terms": terms,
+                "invalid_action": bool(invalid)}
+        if terminated:
+            info["metrics"] = self.metrics()  # diagnostics, never policy inputs
+        return self._observation(), reward, terminated, False, info
 
-    def summary(self) -> dict[str, float | int]:
-        delays = []
-        for i in range(N_HOSTS):
-            if self.first_compromise_time[i] >= 0:
-                if self.first_detection_time[i] >= 0:
-                    delays.append(max(0, int(self.first_detection_time[i] - self.first_compromise_time[i])))
-                else:
-                    delays.append(self.config.horizon - int(self.first_compromise_time[i]))
-        return {
-            "episode_return": float(self.episode_return),
-            "total_compromises": int(self.total_compromises),
-            "critical_compromises": int(self.critical_compromises),
-            "active_compromised_at_end": int(np.sum(self.compromised & ~self.isolated)),
-            "mean_detection_delay": float(np.mean(delays)) if delays else 0.0,
-            "false_isolations": int(self.false_isolations),
-            "successful_isolations": int(self.successful_isolations),
-            "budget_used": int(self.action_costs),
-            "remaining_budget": int(self.budget),
-            "detected_hosts": int(self.detected_count),
-        }
+    def metrics(self) -> dict[str, float | int]:
+        infected = self.first_compromise_time >= 0
+        confirmed = self.first_confirmation_time >= 0
+        # Right-censored delay: unconfirmed infection has delay to episode end.
+        end_times = np.where(confirmed, self.first_confirmation_time, self.t)
+        delays = (end_times - self.first_compromise_time)[infected]
+        return {"return": float(self.episode_return), "total_compromises": int(infected.sum()),
+                "critical_compromises": int(np.sum(infected & CRITICAL)),
+                "uncontained_at_end": int(np.sum(self.compromised & ~self.isolated)),
+                "false_isolations": self.false_isolations,
+                "successful_isolations": self.successful_isolations,
+                "action_costs": self.action_costs, "invalid_actions": self.invalid_actions,
+                "confirmed_fraction": float(confirmed.sum() / max(1, infected.sum())),
+                "censored_confirmation_delay": float(delays.mean()) if len(delays) else 0.}
 
-    def render(self) -> str:
-        parts = []
-        for i, name in enumerate(HOSTS):
-            status = "COMPROMISED" if self.compromised[i] else "clean/unknown"
-            if self.isolated[i]:
-                status += ", isolated"
-            if self.patched[i]:
-                status += ", patched"
-            parts.append(f"{name}: {status}; belief={self.belief[i]:.2f}; alert={int(self.alert[i])}")
-        return "\n".join(parts)
+    def public_snapshot(self) -> dict[str, Any]:
+        """Environment-only demonstration; deliberately omits actual attacker state."""
+        return {"time": self.t, "budget": self.budget,
+                "hosts": [{"name": HOSTS[i], "alert": bool(self.alert[i]),
+                           "last_inspection": ("unknown", "clean", "compromised")[int(self.inspection_result[i]) + 1],
+                           "patched": bool(self.patched[i]), "isolated": bool(self.isolated[i]),
+                           "decoy": bool(self.decoy[i])} for i in range(N_HOSTS)]}
+
+
+def action_name(action: int) -> str:
+    if action == WAIT:
+        return "wait"
+    kind, host = divmod(action - 1, N_HOSTS)
+    return f"{('inspect', 'patch', 'isolate', 'decoy')[kind]}:{HOSTS[host]}"

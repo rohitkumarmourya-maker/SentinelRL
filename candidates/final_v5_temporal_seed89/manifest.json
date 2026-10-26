@@ -1,0 +1,73 @@
+{
+  "status": "COMPLETE",
+  "family": "final_v5_temporal",
+  "assigned_training_seed": 89,
+  "prespecified_training_seeds": [
+    17,
+    29,
+    43,
+    71,
+    89
+  ],
+  "training_episodes": 20000,
+  "selected_template": "candidates/belief_shared_n3_mse_v5/seed101_ep20000.pt",
+  "selected_template_sha256": "be002febdc1ffcab5a602cd853b85470f88d50475ee213cc2aaddc93e8d0b8b7",
+  "template_parameter_hash": "6f6c31396bf5a4990970cc03f6281e68f4add08731fe6caf3965a1cad3629588",
+  "config": {
+    "gamma": 1.0,
+    "representation": "sufficient",
+    "architecture": "shared_host",
+    "learning_rate": 0.0003,
+    "batch_size": 128,
+    "replay_capacity": 30000,
+    "learning_starts": 1000,
+    "train_every": 1,
+    "target_sync_updates": 500,
+    "epsilon_start": 1.0,
+    "epsilon_end": 0.02,
+    "epsilon_decay_steps": 240000,
+    "hidden_size": 128,
+    "n_step": 3,
+    "grad_clip": 10.0,
+    "huber_beta": 5.0,
+    "td_loss": "mse",
+    "compress_forced_wait": true
+  },
+  "environment": {
+    "horizon": 48,
+    "response_budget": 6,
+    "attack_base_probability": 0.23,
+    "alert_sensitivity": 0.55,
+    "false_positive_rate": 0.08,
+    "patch_multiplier": 0.2,
+    "decoy_multiplier": 0.25,
+    "alert_ema_alpha": 0.35
+  },
+  "source_sha256": {
+    "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+    "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+    "src/champion.py": "014a875fbecd4f758ea62a3e6b019bdca3e42f0458b2a94ef9f6fd9e20854987",
+    "train_candidate.py": "31cac8e569b2f737c8b8c4e4d3740cf3b8775e5d7ead88c57e75ba3c5dfa7333",
+    "train_final.py": "408fb2eec9f072e1b70a9f9d8b5b382d833dbef01bb4fecdee40fc0e6d436af5"
+  },
+  "training_scenario_rule": "1000000*training_seed+episode_index",
+  "timestamp_utc": "2026-10-26T12:27:59.111540+00:00",
+  "device": "cpu",
+  "python": "3.12.5",
+  "numpy": "2.2.6",
+  "torch": "2.8.0",
+  "validation_executed": false,
+  "final_test_executed": false,
+  "checkpoint_selection": "fixed selected budget for every prespecified seed",
+  "preserved_checkpoint_episodes": [
+    10000,
+    20000
+  ],
+  "initial_parameter_hash": "43bdf52d71614dc37cbf18ad2383f351bc310806ac97af9fa51192b72dcc5d18",
+  "elapsed_seconds": 788.0294768329986,
+  "environment_steps": 960000,
+  "updates": 351745,
+  "decision_transitions": 352738,
+  "final_parameter_hash": "176595174fa9003a116b7214f9029fb4f3063c54dc297637ead582ef5cc47577",
+  "checkpoint_sha256": "f3bf61bf13773e17347bba1a031f05123fc3073e0bad1b4930f176e9c494b289"
+}

@@ -1,0 +1,10 @@
+{
+  "authorized": true,
+  "approved_utc": "2026-10-26T12:59:43.179086+00:00",
+  "reviewer": "parent judge; explicit review approval after independent hash/coverage audit",
+  "protocol_sha256": "ad11c25a5389477c4351c11047b89fb48aca57f81b732b30795a77646bbccecf",
+  "scenario_count": 10000,
+  "scenario_base": 900000000,
+  "scenario_stride": 103,
+  "policy_or_configuration_changes_after_approval": false
+}

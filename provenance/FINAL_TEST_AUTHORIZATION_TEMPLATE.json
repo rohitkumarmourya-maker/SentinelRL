@@ -1,0 +1,9 @@
+{
+  "authorized": false,
+  "protocol_sha256": "ad11c25a5389477c4351c11047b89fb48aca57f81b732b30795a77646bbccecf",
+  "scenario_count": 10000,
+  "scenario_base": 900000000,
+  "scenario_stride": 103,
+  "required_parent_review": "all policy weights/configuration/comparator definitions frozen before fresh test",
+  "instructions": "Parent reviewer may write approved contents as provenance/FINAL_TEST_AUTHORIZATION.json. This template does not authorize evaluation."
+}

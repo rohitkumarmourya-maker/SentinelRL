@@ -1,0 +1,35 @@
+{
+  "benchmark_directory": "results/final_benchmark",
+  "training_csvs": {
+    "17": "results/training_champion_seed17.csv",
+    "29": "results/training_champion_seed29.csv",
+    "43": "results/training_champion_seed43.csv",
+    "71": "results/training_champion_seed71.csv",
+    "89": "results/training_champion_seed89.csv"
+  },
+  "labels": {
+    "previous_ddqn": "Prior DDQN",
+    "previous_no_memory": "Prior no-memory",
+    "previous_tabular": "Prior tabular",
+    "previous_alert_rule": "Prior alert rule",
+    "original_alert": "Original alert",
+    "original_threshold": "Original threshold",
+    "original_patch": "Original patch",
+    "original_random": "Random legal",
+    "original_full_transfer": "Original full transfer",
+    "original_no_stealth_transfer": "No-stealth transfer",
+    "original_full_ensemble": "Old full ensemble",
+    "original_no_stealth_ensemble": "Old no-stealth ens.",
+    "previous_ddqn_ensemble": "Prior DDQN ens.",
+    "previous_no_memory_ensemble": "Prior no-memory ens.",
+    "original_tabular_transfer": "Old tabular transfer",
+    "original_tabular_retrained": "Tabular retrain",
+    "graph_pure_individual_20k": "Graph DDQN",
+    "graph_pure_temporal_ensemble": "Graph temporal ens.",
+    "graph_pure_20k_ensemble": "Graph final ens.",
+    "graph_prior_shield_td_retrained": "Graph + prior/shield",
+    "tuned_belief_threshold": "Tuned diagnostic",
+    "no_op": "Wait only"
+  },
+  "display_comparators": []
+}

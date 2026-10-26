@@ -1,165 +1,99 @@
-"""Evaluation baselines and discretized Tabular Q-Learning RL comparator."""
+"""Observation-only controls and a coarse tabular Q-learning RL baseline.
+
+The handcrafted alert responder is a diagnostic comparator, never a DQN teacher.
+"""
 from __future__ import annotations
-
-from collections import defaultdict
+import json
+from pathlib import Path
 import numpy as np
-from .environment import (
-    WAIT,
-    N_HOSTS,
-    N_ACTIONS,
-    INSPECT_BASE,
-    PATCH_BASE,
-    ISOLATE_BASE,
-    DECOY_BASE,
-    FEATURES_PER_HOST,
-    VULNERABILITY,
-    CRITICALITY,
-)
+from .environment import (N_HOSTS, FEATURES_PER_HOST, WAIT, INSPECT_BASE, PATCH_BASE,
+                          ISOLATE_BASE, DECOY_BASE, N_ACTIONS)
 
 
-class RandomLegalPolicy:
-    name = "Random legal"
+class NoOpPolicy:
+    def act(self, observation, mask, explore=False):
+        return WAIT
 
-    def __init__(self, seed: int = 0):
+
+class RandomPolicy:
+    def __init__(self, seed=0):
         self.rng = np.random.default_rng(seed)
 
-    def act(self, obs: np.ndarray, mask: np.ndarray) -> int:
+    def act(self, observation, mask, explore=False):
         return int(self.rng.choice(np.flatnonzero(mask)))
 
 
-class PatchPriorityPolicy:
-    """Harden critical assets first; isolate only when telemetry is very strong."""
-
-    name = "Patch priority"
-
-    def act(self, obs: np.ndarray, mask: np.ndarray) -> int:
-        x = obs[: N_HOSTS * FEATURES_PER_HOST].reshape(N_HOSTS, FEATURES_PER_HOST)
-        suspicious = [i for i in range(N_HOSTS) if mask[INSPECT_BASE + i] and x[i, 0] > 0.55]
-        if suspicious:
-            i = max(suspicious, key=lambda j: x[j, 0] * CRITICALITY[j])
-            return INSPECT_BASE + i
-        confirmed = [i for i in range(N_HOSTS) if x[i, 2] and x[i, 3] and mask[ISOLATE_BASE + i]]
-        if confirmed:
-            return ISOLATE_BASE + max(confirmed, key=lambda j: CRITICALITY[j])
-        patchable = [i for i in range(N_HOSTS) if mask[PATCH_BASE + i]]
-        if patchable:
-            i = max(patchable, key=lambda j: CRITICALITY[j] * VULNERABILITY[j])
-            return PATCH_BASE + i
-        return WAIT
-
-
 class AlertResponderPolicy:
-    """Inspect the riskiest unverified host, isolate confirmed compromise, then harden."""
-
-    name = "Alert responder"
-
-    def act(self, obs: np.ndarray, mask: np.ndarray) -> int:
-        x = obs[: N_HOSTS * FEATURES_PER_HOST].reshape(N_HOSTS, FEATURES_PER_HOST)
-        confirmed = [
-            i
-            for i in range(N_HOSTS)
-            if x[i, 2] > 0.5 and x[i, 3] > 0.5 and not x[i, 7] and mask[ISOLATE_BASE + i]
-        ]
-        if confirmed:
-            i = max(confirmed, key=lambda j: CRITICALITY[j])
-            return ISOLATE_BASE + i
-        inspectable = [
-            i
-            for i in range(N_HOSTS)
-            if mask[INSPECT_BASE + i] and (x[i, 1] > 0.5 or x[i, 0] > 0.27)
-        ]
-        if inspectable:
-            i = max(inspectable, key=lambda j: x[j, 0] * (0.5 + CRITICALITY[j]))
-            return INSPECT_BASE + i
-        decoyable = [i for i in range(N_HOSTS) if mask[DECOY_BASE + i]]
-        if decoyable:
-            i = max(decoyable, key=lambda j: CRITICALITY[j] * VULNERABILITY[j])
-            return DECOY_BASE + i
-        patchable = [i for i in range(N_HOSTS) if mask[PATCH_BASE + i]]
-        if patchable:
-            i = max(patchable, key=lambda j: CRITICALITY[j] * VULNERABILITY[j])
-            return PATCH_BASE + i
+    """Fixed sensor rule used only to measure whether learned control adds value."""
+    def act(self, observation, mask, explore=False):
+        nodes = observation[:N_HOSTS * FEATURES_PER_HOST].reshape(N_HOSTS, FEATURES_PER_HOST)
+        alarm, ema, diagnosis, age, vuln, criticality = nodes[:, :6].T
+        candidates = (diagnosis == 1) & mask[ISOLATE_BASE:DECOY_BASE]
+        if candidates.any():
+            host = int(np.argmax(np.where(candidates, criticality, -1)))
+            return ISOLATE_BASE + host
+        # Do not immediately repeat a clean diagnostic; it remains a stale result.
+        candidates = mask[INSPECT_BASE:PATCH_BASE] & ((diagnosis == 0) | (age >= 3 / 48))
+        score = .5 * alarm + ema
+        candidates &= score >= .45
+        if candidates.any():
+            host = int(np.argmax(np.where(candidates, score * (1 + criticality), -1)))
+            return INSPECT_BASE + host
         return WAIT
 
 
-class ThresholdDefensePolicy:
-    """Threshold policy: quarantine only above a high posterior-risk threshold."""
-
-    name = "Threshold defense"
-
-    def act(self, obs: np.ndarray, mask: np.ndarray) -> int:
-        x = obs[: N_HOSTS * FEATURES_PER_HOST].reshape(N_HOSTS, FEATURES_PER_HOST)
-        likely = [
-            i
-            for i in range(N_HOSTS)
-            if x[i, 0] >= 0.78 and not x[i, 7] and mask[ISOLATE_BASE + i]
-        ]
-        if likely:
-            return ISOLATE_BASE + max(likely, key=lambda j: CRITICALITY[j] * x[j, 0])
-        suspects = [
-            i
-            for i in range(N_HOSTS)
-            if mask[INSPECT_BASE + i] and (x[i, 1] > 0.5 or x[i, 0] > 0.4)
-        ]
-        if suspects:
-            return INSPECT_BASE + max(suspects, key=lambda j: x[j, 0])
-        patchable = [i for i in range(N_HOSTS) if mask[PATCH_BASE + i]]
-        if patchable:
-            i = max(patchable, key=lambda j: CRITICALITY[j] * VULNERABILITY[j])
-            return PATCH_BASE + i
-        return WAIT
-
-
-class TabularQLearningAgent:
-    """Discretized belief-state Tabular Q-Learning agent for RL algorithm ablation comparison."""
-
-    name = "Tabular Q-Learning"
-
-    def __init__(self, seed: int = 0, alpha: float = 0.18, gamma: float = 0.97):
+class TabularQAgent:
+    """Actual one-step Q-learning over a deliberately coarse observation encoding."""
+    def __init__(self, seed=0, gamma=.98, alpha=.15, decay_steps=80000):
+        self.seed, self.gamma, self.alpha, self.decay_steps = seed, gamma, alpha, decay_steps
         self.rng = np.random.default_rng(seed)
-        self.alpha = alpha
-        self.gamma = gamma
-        self.q_table: dict[tuple[int, ...], np.ndarray] = defaultdict(
-            lambda: np.zeros(N_ACTIONS, dtype=np.float32)
-        )
+        self.table = {}
+        self.environment_steps = self.updates = 0
 
     @staticmethod
-    def encode_state(obs: np.ndarray) -> tuple[int, ...]:
-        x = obs[: N_HOSTS * FEATURES_PER_HOST].reshape(N_HOSTS, FEATURES_PER_HOST)
-        unisolated = x[:, 7] < 0.5
-        conf_hosts = [i for i in range(N_HOSTS) if unisolated[i] and x[i, 2] > 0.5 and x[i, 3] > 0.5]
-        top_conf = max(conf_hosts, key=lambda j: CRITICALITY[j]) if conf_hosts else -1
-        scores = np.where(unisolated, x[:, 0] * (0.5 + CRITICALITY), -1.0)
-        top_suspect = int(np.argmax(scores))
-        max_b = float(x[top_suspect, 0])
-        b_bin = 0 if max_b < 0.16 else (1 if max_b < 0.25 else (2 if max_b < 0.65 else 3))
-        has_alert = int(np.any((x[:, 1] > 0.5) & unisolated))
-        budget_bin = min(3, int(round(obs[54] * 6.0)))
-        newly_flag = int(obs[57] * N_HOSTS > 0.5)
-        return (top_conf, top_suspect, b_bin, has_alert, budget_bin, newly_flag)
+    def key(observation):
+        nodes = observation[:N_HOSTS * FEATURES_PER_HOST].reshape(N_HOSTS, FEATURES_PER_HOST)
+        # Fixed v/c omitted: host positions preserve identities. Quantized sensor
+        # and own defense history only; no true compromised-state bits.
+        values = np.column_stack((nodes[:, 0], np.rint(nodes[:, 2] * 2), nodes[:, 6:9])).astype(int)
+        return ','.join(map(str, values.reshape(-1))) + f'|{int(round(observation[-2] * 6))}|{min(3, int(observation[-1] * 4))}'
 
-    def act(self, obs: np.ndarray, mask: np.ndarray, epsilon: float = 0.0) -> int:
+    def epsilon(self):
+        return 1. - .95 * min(1., self.environment_steps / self.decay_steps)
+
+    def values(self, observation):
+        return self.table.get(self.key(observation), np.zeros(N_ACTIONS, dtype=np.float64))
+
+    def act(self, observation, mask, explore=False):
         legal = np.flatnonzero(mask)
-        if epsilon > 0.0 and self.rng.random() < epsilon:
-            if self.rng.random() < 0.55:
-                return WAIT
+        if explore and self.rng.random() < self.epsilon():
             return int(self.rng.choice(legal))
-        s = self.encode_state(obs)
-        q = self.q_table[s].copy()
-        q[~mask] = -1e9
-        return int(np.argmax(q))
+        return int(np.argmax(np.where(mask, self.values(observation), -np.inf)))
 
-    def update(
-        self,
-        obs: np.ndarray,
-        action: int,
-        reward: float,
-        next_obs: np.ndarray,
-        done: bool,
-        next_mask: np.ndarray,
-    ) -> None:
-        s = self.encode_state(obs)
-        ns = self.encode_state(next_obs)
-        q_next = 0.0 if done else float(np.max(np.where(next_mask, self.q_table[ns], -1e9)))
-        td_target = reward + self.gamma * q_next
-        self.q_table[s][action] += self.alpha * (td_target - self.q_table[s][action])
+    def observe(self, state, action, reward, next_state, done, next_mask):
+        key = self.key(state)
+        values = self.table.setdefault(key, np.zeros(N_ACTIONS, dtype=np.float64))
+        continuation = 0. if done else float(np.max(self.values(next_state)[next_mask]))
+        delta = reward + self.gamma * continuation - values[action]
+        values[action] += self.alpha * delta
+        self.environment_steps += 1
+        self.updates += 1
+        return {"td_error": float(delta), "update": self.updates}
+
+    def save(self, path, metadata=None):
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
+        Path(path).write_text(json.dumps({"format_version": 2, "algorithm": "tabular_q", "seed": self.seed,
+              "gamma": self.gamma, "alpha": self.alpha, "decay_steps": self.decay_steps,
+              "environment_steps": self.environment_steps, "updates": self.updates,
+              "table": {key: value.tolist() for key, value in self.table.items()}, "metadata": metadata or {}}))
+
+    @classmethod
+    def load(cls, path):
+        payload = json.loads(Path(path).read_text())
+        if payload.get("format_version") != 2 or payload.get("algorithm") != "tabular_q":
+            raise ValueError("incompatible tabular checkpoint")
+        agent = cls(payload["seed"], payload["gamma"], payload["alpha"], payload["decay_steps"])
+        agent.table = {key: np.array(value, dtype=np.float64) for key, value in payload["table"].items()}
+        agent.checkpoint_metadata = payload["metadata"]
+        agent.environment_steps, agent.updates = payload["environment_steps"], payload["updates"]
+        return agent

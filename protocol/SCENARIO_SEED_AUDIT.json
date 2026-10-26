@@ -1,0 +1,95 @@
+{
+  "status": "DISJOINT",
+  "audited_utc": "2026-10-26T12:39:02.591309+00:00",
+  "final_seed_base": 900000000,
+  "final_seed_stride": 103,
+  "final_scenarios": 10000,
+  "final_first": 900000000,
+  "final_last": 901029897,
+  "final_outcomes_accessed": false,
+  "known_exposures": {
+    "original_training280": {
+      "count": 840,
+      "minimum": 170000,
+      "maximum": 430279,
+      "intersection": []
+    },
+    "original_expert25": {
+      "count": 75,
+      "minimum": 850000,
+      "maximum": 2150024,
+      "intersection": []
+    },
+    "original_test30": {
+      "count": 30,
+      "minimum": 300000,
+      "maximum": 302813,
+      "intersection": []
+    },
+    "original_sensitivity20x3": {
+      "count": 60,
+      "minimum": 400000,
+      "maximum": 421007,
+      "intersection": []
+    },
+    "previous_corrected_training2500": {
+      "count": 7500,
+      "minimum": 17000000,
+      "maximum": 43002499,
+      "intersection": []
+    },
+    "previous_corrected_test100": {
+      "count": 100,
+      "minimum": 300000,
+      "maximum": 309603,
+      "intersection": []
+    },
+    "previous_corrected_sensor100": {
+      "count": 100,
+      "minimum": 400000,
+      "maximum": 409603,
+      "intersection": []
+    },
+    "current_development_training20k": {
+      "count": 40000,
+      "minimum": 101000000,
+      "maximum": 202019999,
+      "intersection": []
+    },
+    "current_validation300_superset": {
+      "count": 300,
+      "minimum": 600000,
+      "maximum": 630199,
+      "intersection": []
+    },
+    "current_final_training20k": {
+      "count": 100000,
+      "minimum": 17000000,
+      "maximum": 89019999,
+      "intersection": []
+    },
+    "original_and_new_constructor_seeds": {
+      "count": 7,
+      "minimum": 17,
+      "maximum": 202,
+      "intersection": []
+    }
+  },
+  "prospective_amendment": {
+    "retired_base": 900000,
+    "retired_count": 10000,
+    "retired_was_not_executed": true,
+    "reason": "expanded old proposal overlapped original expert-demonstration scenario1450020; new base chosen before any final outcome",
+    "retired_collision_with_original_experts": [
+      1450020
+    ]
+  },
+  "power_amendment": {
+    "count": 10000,
+    "bootstrap_replicates": 50000,
+    "chosen_before_test": true,
+    "development_paired_sd_approx": 4.442,
+    "development_gap_approx": 0.2103,
+    "purpose": "resolve small paired gaps with conservative familywise inference"
+  }
+}

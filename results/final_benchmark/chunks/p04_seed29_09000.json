@@ -1,0 +1,12 @@
+{
+  "policy": "previous_tabular",
+  "model_seeds": [
+    29
+  ],
+  "scenario_first_index": 9000,
+  "scenario_stop_index": 10000,
+  "rows": 1000,
+  "elapsed_seconds": 2.26594225000008,
+  "sha256": "31acdfd97520f453890e0423aadbe57a7a57364c789c448b58b168fad9983214",
+  "created_utc": "2026-10-26T13:01:20.744476+00:00"
+}

@@ -1,0 +1,12 @@
+{
+  "policy": "graph_pure_temporal_ensemble",
+  "model_seeds": [
+    0
+  ],
+  "scenario_first_index": 9000,
+  "scenario_stop_index": 10000,
+  "rows": 1000,
+  "elapsed_seconds": 10.273844125000323,
+  "sha256": "3674b12ec5ecca17c98c84ef7367d697ba57a4ccaabe4256e350df6af77fcd27",
+  "created_utc": "2026-10-26T13:06:49.666831+00:00"
+}

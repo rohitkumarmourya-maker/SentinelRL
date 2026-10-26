@@ -1,0 +1,6 @@
+{
+  "benchmark_command": "python3 -u benchmark.py --split final --spec protocol/frozen_comparison.json --workers 8 --chunk-size 1000 --output results/final_benchmark",
+  "analysis_command": "python3 summarize_champion_benchmark.py --run results/final_benchmark --bootstrap 50000 --include-fixed-checkpoints",
+  "protocol_sha256": "ad11c25a5389477c4351c11047b89fb48aca57f81b732b30795a77646bbccecf",
+  "no_outcome_based_reruns": true
+}

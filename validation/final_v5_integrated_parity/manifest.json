@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "timestamp_utc": "2026-10-26T12:49:22.511189+00:00",
+  "scope": "independent rootLearnedQEnsemble plus benchmark.run_episode on exactly200existing development scenarios",
+  "reference": "validation/final_v5_temporal_sanity/ensemble_episodes.csv",
+  "reference_sha256": "9ce3afc4130c6dc5fe69b1127f88f46416d74b2ead0a4febd3ea2fca5b1cc811",
+  "source_sha256": {
+    "benchmark.py": "f0b45404e501cdea1ff3be9626c640c9a4a764165ba0771713eef1b099639e99",
+    "src/ensembles.py": "5fa2ca592886ed8daaf41457cb60c196d58951a7e32c6965d18b80142203ad6d",
+    "src/policy_loading.py": "aea957d9a7188113f976f68ce22080bdfde9b836c9928ecb0a7c936917917588",
+    "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+    "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de"
+  },
+  "checkpoint_sha256": {
+    "candidates/final_v5_temporal_seed17/seed17_ep10000.pt": "37b8701d3723e20460ae0e1247ad12489e2a7cfc50478a4550398cd9e39c6822",
+    "candidates/final_v5_temporal_seed17/seed17_ep20000.pt": "8df44e57d3a56b42bfc75659d4e0112174b4a38e93a18f298ac3eb116020222e",
+    "candidates/final_v5_temporal_seed29/seed29_ep10000.pt": "cf99c26587717ae01cba0e72d5dfa7ff8c424b0c9556a727a8de05cd292c6758",
+    "candidates/final_v5_temporal_seed29/seed29_ep20000.pt": "a1a6cde97c8b3f00c38ced7da41e27acf3b756281d91331ca832c6a116524754",
+    "candidates/final_v5_temporal_seed43/seed43_ep10000.pt": "f3decc7469f597feaab7961b2b5875530bfb9e78056eb9dcdffba7e3afd05617",
+    "candidates/final_v5_temporal_seed43/seed43_ep20000.pt": "936dbe77eefb71e675c404ba308b90bb097c9636268180cffbc86f2f43f6883f",
+    "candidates/final_v5_temporal_seed71/seed71_ep10000.pt": "4dcf9dbe9cb9a30764317f7dd35911ebab62baaa5d5d8f308a328869085b0964",
+    "candidates/final_v5_temporal_seed71/seed71_ep20000.pt": "e268668a01f2b6b329661c900a6313f08205df997f0f16e8be82e09922a591f5",
+    "candidates/final_v5_temporal_seed89/seed89_ep10000.pt": "35743cc4b621e37e0353bdf771084f0c597c5a2062c29e46849d51970fa982ab",
+    "candidates/final_v5_temporal_seed89/seed89_ep20000.pt": "f3bf61bf13773e17347bba1a031f05123fc3073e0bad1b4930f176e9c494b289"
+  },
+  "episodes_compared": 200,
+  "numeric_fields_compared": 7000,
+  "exact_mismatches": [],
+  "integrated_mean_return": -1.856853481048345,
+  "validation_scenario_rule": "600000+101*i",
+  "final_test_executed": false,
+  "action_and_reward_sequences_recorded": true,
+  "source_or_protocol_mutations": false
+}

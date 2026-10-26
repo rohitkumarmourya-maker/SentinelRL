@@ -1,0 +1,13 @@
+{
+  "timestamp_utc": "2026-10-26T12:19:50.165273+00:00",
+  "pid": 62016,
+  "signal": "SIGINT",
+  "scope": "split after verified complete seed101 checkpoint; final validation rerun from frozen weights",
+  "checkpoint_sha256": "ee33e8eb5a18ef78af4ce72fc21fc381e516d604cf53ab5216fba76b20c4a9c4",
+  "parameter_sha256": "1defc67e767a14139102ab4422f24aded94f3b7be5731b6c8fb1a75b766cb0cc",
+  "environment_steps": 960000,
+  "training_episodes": 20000,
+  "updates": 380853,
+  "config_and_frozen_source_verified": true,
+  "command": "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python train_candidate.py --name belief_context_n3_v7 --seeds 101 202 --episodes 20000 --checkpoints 2000 5000 10000 20000 --validation 200 --config {\"architecture\":\"contextual_host\",\"representation\":\"sufficient\",\"hidden_size\":128,\"n_step\":3,\"learning_rate\":0.0003,\"epsilon_decay_steps\":240000,\"replay_capacity\":30000}"
+}

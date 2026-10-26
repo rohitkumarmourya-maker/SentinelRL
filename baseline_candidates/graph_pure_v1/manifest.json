@@ -1,0 +1,58 @@
+{
+  "name": "graph_pure_v1",
+  "kind": "pure",
+  "created_utc": "2026-10-26T11:38:31.414334+00:00",
+  "status": "COMPLETE",
+  "training_seeds": [
+    101,
+    202
+  ],
+  "training_episodes": 20000,
+  "config": {
+    "gamma": 1.0,
+    "learning_rate": 0.0005,
+    "batch_size": 128,
+    "replay_capacity": 100000,
+    "learning_starts": 1000,
+    "train_every": 1,
+    "target_sync_updates": 500,
+    "epsilon_start": 1.0,
+    "epsilon_end": 0.02,
+    "epsilon_decay_steps": 300000,
+    "hidden_size": 128,
+    "n_step": 3,
+    "grad_clip": 10.0,
+    "huber_beta": 5.0,
+    "compress_forced_wait": true
+  },
+  "environment": {
+    "horizon": 48,
+    "response_budget": 6,
+    "attack_base_probability": 0.23,
+    "alert_sensitivity": 0.55,
+    "false_positive_rate": 0.08,
+    "patch_multiplier": 0.2,
+    "decoy_multiplier": 0.25,
+    "alert_ema_alpha": 0.35
+  },
+  "source_sha256": {
+    "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+    "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+    "src/comparators.py": "979500f316a3a77589ca91d4537ec6b5d0d87ed26ee25aced1ce9e67ec957a8b",
+    "src/graph_baseline.py": "1e2d055da6dd51de32fb12227cba7c07d096c3d3cb26e13bb6a906597f99f98a",
+    "vendor/original_v1/dqn.py": "982b0ff7f88abb622643e84bff05115870295d2936ba46768b66a577aaf0aed1",
+    "vendor/original_v1/environment.py": "ba250217c2b2f3e8e5a2027d5b6ae05acb0e149c7dde071fcb374f70610631cc",
+    "vendor/original_v1/policies.py": "fe79e41f463b5dd324907440562ccc7cdda081973339e75a70cb07b80e206e90",
+    "train_graph_baselines.py": "793a5f9c01d3486fc126b90bff82bb1a3ce83218ebc02ef592a13f9b5fb0e59c"
+  },
+  "python": "3.12.5",
+  "torch": "2.8.0",
+  "numpy": "2.2.6",
+  "device": "cpu",
+  "training_scenario_rule": "1000000 * training_seed + episode_index",
+  "validation_scenario_rule": "600000 + 101 * scenario_index",
+  "validation_scenarios": 200,
+  "test_scenarios_used": false,
+  "forced_wait_compression": "actual suffix rewards folded into prior transition with duration discount",
+  "elapsed_seconds": 546.3300612500007
+}

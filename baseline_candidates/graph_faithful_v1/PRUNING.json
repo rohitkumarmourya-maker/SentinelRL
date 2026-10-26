@@ -1,0 +1,15 @@
+{
+  "status": "PRUNED_DEVELOPMENT_TRIAL",
+  "at_utc": "2026-10-26T12:03:09.077164+00:00",
+  "authorized_by": "parent scientific review before final test",
+  "reason": "trainEvery1 spends many optimizer updates on voluntary WAIT and shows no validation gain over prior/shield; rerun matching original optimizer cadence trainEvery8 with same20k interaction budget",
+  "last_saved_checkpoint": "seed101_ep10000.pt",
+  "last_saved_checkpoint_episodes": 10000,
+  "logged_completed_seed101_episodes": 11000,
+  "logged_environment_steps": 528000,
+  "logged_updates": 189999,
+  "logged_elapsed_seconds": 504.4304388750006,
+  "seed202_started": false,
+  "termination": "SIGINT after complete10k checkpoint and subsequent11k rawlog; exit130 deliberate",
+  "test_scenarios_used": false
+}

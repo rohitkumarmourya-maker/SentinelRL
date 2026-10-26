@@ -1,0 +1,12 @@
+{
+  "policy": "tuned_belief_threshold",
+  "model_seeds": [
+    0
+  ],
+  "scenario_first_index": 8000,
+  "scenario_stop_index": 9000,
+  "rows": 1000,
+  "elapsed_seconds": 3.39398733300186,
+  "sha256": "79b013453775287dcd4a4b0a281cee51e135e6ca2fc36a80abe56555de90cf71",
+  "created_utc": "2026-10-26T13:08:24.248163+00:00"
+}

@@ -1,0 +1,12 @@
+{
+  "policy": "previous_ddqn",
+  "model_seeds": [
+    29
+  ],
+  "scenario_first_index": 1000,
+  "scenario_stop_index": 2000,
+  "rows": 1000,
+  "elapsed_seconds": 3.4689284170017345,
+  "sha256": "76bf9f290dd1236585595b0fd509681f85d9d3189da338c86c631d1ad84f47c9",
+  "created_utc": "2026-10-26T13:00:57.942423+00:00"
+}

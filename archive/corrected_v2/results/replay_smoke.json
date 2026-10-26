@@ -1,0 +1,19 @@
+{
+  "status": "PASSED",
+  "checkpoint": "models/ddqn_history_seed17.pt",
+  "environment_seed": 300000,
+  "source_sha256": "342709f0edec919c70b44d35d814ab56161f126926482ef0b35e21171220c40e",
+  "raw_metric_and_action_counts_match": true,
+  "actual_metrics": {
+    "return": -50.83250002801421,
+    "total_compromises": 5,
+    "critical_compromises": 3,
+    "uncontained_at_end": 3,
+    "false_isolations": 1,
+    "successful_isolations": 2,
+    "action_costs": 6,
+    "invalid_actions": 0,
+    "confirmed_fraction": 0.0,
+    "censored_confirmation_delay": 44.4
+  }
+}

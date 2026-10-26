@@ -1,0 +1,29 @@
+{
+  "policy": "arithmetic_mean_learned_q",
+  "candidate": "belief_shared_n3_mse_v5",
+  "training_episodes_per_member": 10000,
+  "training_seeds": [
+    101,
+    202
+  ],
+  "members": 2,
+  "independent_ensembles": 1,
+  "validation_scenario_rule": "600000+101*i",
+  "validation_scenarios": 200,
+  "test_scenarios_used": false,
+  "checkpoint_sha256": {
+    "seed101_ep10000.pt": "77490c57caec258ad8a2f2c0e3d665fc5cb80f0e4c30d0395dc1f33a83370466",
+    "seed202_ep10000.pt": "a5932ae91176dfa81df4cc66bb63ab5fad6112d912bb4ac3dd18515f64b3fb61"
+  },
+  "ensemble_source_sha256": "dbf8c7c2b9c312660d0214a796709d9c3f0dbaca6b2d6ff37c1aeb494708c92f",
+  "return": -2.0334364813804626,
+  "total_compromises": 1.14,
+  "critical_compromises": 0.08,
+  "uncontained_at_end": 0.03,
+  "false_isolations": 0.18,
+  "successful_isolations": 1.11,
+  "action_costs": 4.295,
+  "invalid_actions": 0.0,
+  "confirmed_fraction": 0.1383333333333333,
+  "censored_confirmation_delay": 41.34041666666666
+}

@@ -1,0 +1,12 @@
+{
+  "policy": "champion_individual_20k",
+  "model_seeds": [
+    71
+  ],
+  "scenario_first_index": 9000,
+  "scenario_stop_index": 10000,
+  "rows": 1000,
+  "elapsed_seconds": 4.719059416998789,
+  "sha256": "c2246bef8e85fc6a1d0fbb57d6259b66233a1c1b5039a382cd5a127c23161c53",
+  "created_utc": "2026-10-26T13:00:47.942971+00:00"
+}

@@ -1,0 +1,109 @@
+{
+  "candidate": "belief_shared_n3_mse_v5",
+  "config": {
+    "gamma": 1.0,
+    "representation": "sufficient",
+    "architecture": "shared_host",
+    "learning_rate": 0.0003,
+    "batch_size": 128,
+    "replay_capacity": 30000,
+    "learning_starts": 1000,
+    "train_every": 1,
+    "target_sync_updates": 500,
+    "epsilon_start": 1.0,
+    "epsilon_end": 0.02,
+    "epsilon_decay_steps": 240000,
+    "hidden_size": 128,
+    "n_step": 3,
+    "grad_clip": 10.0,
+    "huber_beta": 5.0,
+    "td_loss": "mse",
+    "compress_forced_wait": true
+  },
+  "seeds": {
+    "101": {
+      "environment_steps": 960000,
+      "decision_transitions": 325944,
+      "updates": 324946,
+      "training_bins": [
+        {
+          "end_episode": 5000,
+          "return_last1000": -4.158277296804784,
+          "mean_episode_td_loss": 30.91097088615125,
+          "mean_unclipped_gradient_norm": 186.64062267941313,
+          "mean_decision_transitions_per_episode": 10.948
+        },
+        {
+          "end_episode": 10000,
+          "return_last1000": -2.401374586290717,
+          "mean_episode_td_loss": 3.147239895809739,
+          "mean_unclipped_gradient_norm": 14.11783628782439,
+          "mean_decision_transitions_per_episode": 23.337
+        },
+        {
+          "end_episode": 15000,
+          "return_last1000": -2.561967382985353,
+          "mean_episode_td_loss": 4.961624697842288,
+          "mean_unclipped_gradient_norm": 19.784551094048286,
+          "mean_decision_transitions_per_episode": 13.448
+        },
+        {
+          "end_episode": 20000,
+          "return_last1000": -2.664782084130048,
+          "mean_episode_td_loss": 2.9688279415444065,
+          "mean_unclipped_gradient_norm": 13.700573421708262,
+          "mean_decision_transitions_per_episode": 22.695
+        }
+      ]
+    },
+    "202": {
+      "environment_steps": 960000,
+      "decision_transitions": 359388,
+      "updates": 358389,
+      "training_bins": [
+        {
+          "end_episode": 5000,
+          "return_last1000": -4.182049396809934,
+          "mean_episode_td_loss": 33.25170348517573,
+          "mean_unclipped_gradient_norm": 216.92824872481032,
+          "mean_decision_transitions_per_episode": 7.365
+        },
+        {
+          "end_episode": 10000,
+          "return_last1000": -2.6994009889250994,
+          "mean_episode_td_loss": 2.4046912962938087,
+          "mean_unclipped_gradient_norm": 10.67161268396396,
+          "mean_decision_transitions_per_episode": 19.653
+        },
+        {
+          "end_episode": 15000,
+          "return_last1000": -2.245674184826612,
+          "mean_episode_td_loss": 1.918174991939754,
+          "mean_unclipped_gradient_norm": 7.686484698664528,
+          "mean_decision_transitions_per_episode": 19.75
+        },
+        {
+          "end_episode": 20000,
+          "return_last1000": -3.117408681474924,
+          "mean_episode_td_loss": 1.8220462509461586,
+          "mean_unclipped_gradient_norm": 9.295368183947769,
+          "mean_decision_transitions_per_episode": 32.898
+        }
+      ]
+    }
+  },
+  "validation_individual_returns": {
+    "seed101_ep2000": -5.822567033675312,
+    "seed101_ep5000": -2.813119980496168,
+    "seed101_ep10000": -2.2968634873956444,
+    "seed101_ep20000": -3.0659364732593297,
+    "seed202_ep2000": -5.10773902930617,
+    "seed202_ep5000": -3.4192529954016195,
+    "seed202_ep10000": -2.9989419865548617,
+    "seed202_ep20000": -2.378945978215336
+  },
+  "ensemble_returns": {
+    "10000": -2.0334364813804626,
+    "20000": -1.9511544827282428
+  }
+}

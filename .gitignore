@@ -1,5 +1,10 @@
-__pycache__/
-.pytest_cache/
-*.pyc
 .venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
 .DS_Store
+*.zip
+*.bundle
+results/final_benchmark/episodes.csv
+provenance/delivery-file-hashes.json
+provenance/GIT_SNAPSHOT.json

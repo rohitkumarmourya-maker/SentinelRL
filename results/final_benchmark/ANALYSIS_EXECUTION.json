@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+    "/Users/goodday/Downloads/rohiy/SentinelRL-champion/summarize_champion_benchmark.py",
+    "--run",
+    "/Users/goodday/Downloads/rohiy/SentinelRL-champion/results/final_benchmark",
+    "--bootstrap",
+    "50000",
+    "--include-fixed-checkpoints"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 24.621762250000756,
+  "finished_utc": "2026-10-26T13:09:00.671108+00:00",
+  "policy_or_configuration_changes": false
+}

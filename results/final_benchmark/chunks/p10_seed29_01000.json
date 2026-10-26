@@ -1,0 +1,12 @@
+{
+  "policy": "original_full_transfer",
+  "model_seeds": [
+    29
+  ],
+  "scenario_first_index": 1000,
+  "scenario_stop_index": 2000,
+  "rows": 1000,
+  "elapsed_seconds": 15.739078958999016,
+  "sha256": "cff0170ca1535604e1d4df5743b6403a884896243f67c688a836223ade6e0139",
+  "created_utc": "2026-10-26T13:02:14.064657+00:00"
+}

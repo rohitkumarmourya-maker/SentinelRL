@@ -1,0 +1,41 @@
+{
+  "status": "COMPLETE",
+  "mode": "lawful",
+  "seeds": [
+    43,
+    71
+  ],
+  "episodes": 20000,
+  "source_sha256": {
+    "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+    "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+    "src/comparators.py": "99929a25c778875809b6388f7755bec4babcdcbf46e1fa24fa5a6516a3fffa4e",
+    "src/original_tabular.py": "dfbb09d5f8d10714121a6a1b3b5b78b1730116edfe2651c2a137285434aae2f2",
+    "vendor/original_v1/policies.py": "fe79e41f463b5dd324907440562ccc7cdda081973339e75a70cb07b80e206e90",
+    "vendor/original_v1/environment.py": "ba250217c2b2f3e8e5a2027d5b6ae05acb0e149c7dde071fcb374f70610631cc",
+    "train_original_tabular.py": "487011f3673aeff7c307abc68beb2b1eb367fc1dbf00810b7b609b8f3de3af56"
+  },
+  "alpha": 0.18,
+  "gamma": 0.97,
+  "epsilon_rule": "max(.05,.85*(1-episode/(episodes*220/280)))",
+  "training_seed_rule": "seed*1000000+episode",
+  "final_test_used": false,
+  "started_utc": "2026-10-26T12:40:55.740645+00:00",
+  "elapsed_seconds": 153.48811108399968,
+  "records": [
+    {
+      "seed": 43,
+      "episodes": 20000,
+      "environment_steps": 960000,
+      "elapsed_seconds": 80.16908754100223,
+      "states": 343
+    },
+    {
+      "seed": 71,
+      "episodes": 20000,
+      "environment_steps": 960000,
+      "elapsed_seconds": 73.30835987500177,
+      "states": 343
+    }
+  ]
+}

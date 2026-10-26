@@ -1,0 +1,24 @@
+{
+  "status": "COMPLETE",
+  "model_hold": "lifted by explicit user instruction: run now",
+  "revised_training_executed": true,
+  "revised_evaluation_executed": true,
+  "revised_model_inference_executed": true,
+  "all_tests_passed": 35,
+  "training_seeds": [
+    17,
+    29,
+    43
+  ],
+  "episodes_per_training_run": 2500,
+  "training_transitions": 1080000,
+  "main_evaluation_episode_rows": 2100,
+  "sensitivity_evaluation_episode_rows": 6300,
+  "test_based_tuning": false,
+  "checkpoint_selection": "fixed final2500episodes for every seed",
+  "source_sha256": "342709f0edec919c70b44d35d814ab56161f126926482ef0b35e21171220c40e",
+  "original_run_directory": "runs/full_20261026",
+  "legacy_evidence": "../legacy/results; incompatible original system, excluded from revised claims",
+  "training_runs": 9,
+  "independent_training_seeds_per_algorithm": 3
+}

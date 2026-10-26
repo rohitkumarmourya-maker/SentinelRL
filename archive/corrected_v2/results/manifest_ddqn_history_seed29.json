@@ -1,0 +1,66 @@
+{
+  "timestamp_utc": "2026-10-26T10:52:27.164216+00:00",
+  "python": "3.12.5",
+  "numpy": "2.2.6",
+  "torch": "2.8.0",
+  "device": "cpu",
+  "source_sha256": "342709f0edec919c70b44d35d814ab56161f126926482ef0b35e21171220c40e",
+  "git_original_head": "dff57ab019fde89506ea2969d7c384ce532a2bbf",
+  "protocol": {
+    "version": 2,
+    "status": "FROZEN_FUTURE_PROTOCOL",
+    "training_seeds": [
+      17,
+      29,
+      43
+    ],
+    "training_episodes_per_seed": 2500,
+    "evaluation_episodes_per_seed_policy": 100,
+    "training_episode_seed": "1000000*training_seed + episode_index",
+    "heldout_episode_seed": "300000 + 97*episode_index",
+    "sensitivity_episode_seed": "400000 + 97*episode_index (same scenarios across sensor conditions)",
+    "sensor_sensitivities": [
+      0.35,
+      0.55,
+      0.75
+    ],
+    "checkpoint_selection": "final fixed training budget, no test selection",
+    "environment": {
+      "horizon": 48,
+      "response_budget": 6,
+      "attack_base_probability": 0.23,
+      "alert_sensitivity": 0.55,
+      "false_positive_rate": 0.08,
+      "patch_multiplier": 0.2,
+      "decoy_multiplier": 0.25,
+      "alert_ema_alpha": 0.35
+    },
+    "ablations": [
+      "untrained_initial_network",
+      "retrained_no_memory_ddqn"
+    ],
+    "baselines": [
+      "tabular_q",
+      "alert_rule_diagnostic",
+      "random_legal",
+      "no_op"
+    ],
+    "uncertainty": "95% crossed bootstrap resampling training-seed rows and paired-scenario columns; 3 seeds is a small sample"
+  },
+  "execution_status": "COMPLETE",
+  "actual_episodes_per_seed": 2500,
+  "actual_seeds": [
+    17,
+    29,
+    43
+  ],
+  "algorithm": "ddqn",
+  "observation_mode": "history",
+  "elapsed_seconds": 14.794396707999113,
+  "environment_steps": 120000,
+  "updates": 29751,
+  "initial_parameter_hash": "2a47b9e2b996fac967a59d0ee60d165acf1371f24fb3cc709e20ef96865b6aa5",
+  "final_parameter_hash": "f94ddb73a164e588168462bfca64bdd43242c67f95c249bd5d59bb02ca4ab985",
+  "parameters_changed": true,
+  "checkpoint_sha256": "609ef0cc1f62baa6b6e6831509be1d14905f33b8c67a32bf6e1c00b95d9ff14d"
+}

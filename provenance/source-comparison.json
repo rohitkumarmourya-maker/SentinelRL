@@ -1,0 +1,9 @@
+{
+  "source_zip_sha256": "e34d81c0f4a30247284021b1104350fa1f6a3a4b50e15373038596c1259191a1",
+  "zip_git_archive_comment": "dff57ab019fde89506ea2969d7c384ce532a2bbf",
+  "github": "https://github.com/rohitkumarmourya-maker/SentinelRL",
+  "cloned_head": "dff57ab019fde89506ea2969d7c384ce532a2bbf",
+  "zip_vs_clone": "All 54 archived entries (files and directories) match the checkout contents; diff -rq excluding .git returned no differences.",
+  "comparison_date": "2026-10-26",
+  "history_policy": "Five original commits preserved unchanged. No historical commits, dates, authors or experiment runs invented. Revised working tree has not been pushed."
+}

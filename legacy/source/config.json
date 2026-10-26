@@ -1,0 +1,42 @@
+{
+  "environment": {
+    "name": "SentinelEnv",
+    "formulation": "partially observable Markov decision process with Bayesian belief and topological features",
+    "hosts": 6,
+    "observation_dim": 58,
+    "discrete_actions": 25,
+    "episode_horizon": 48,
+    "response_budget": 6,
+    "attack_base_probability": 0.23,
+    "alert_sensitivity": 0.55,
+    "false_positive_rate": 0.08,
+    "sensitivity_attack_probabilities": [0.18, 0.23, 0.28]
+  },
+  "dqn": {
+    "architecture": "Topological-Bayesian Graph-Dueling Double-DQN",
+    "hidden_layers": [128, 128],
+    "gcn_node_dim": 32,
+    "gamma": 0.99,
+    "n_step": 3,
+    "learning_rate": 0.0004,
+    "batch_size": 64,
+    "replay_capacity": 16000,
+    "learning_starts": 120,
+    "train_every_steps": 2,
+    "tau": 0.005,
+    "epsilon_start": 0.90,
+    "epsilon_end": 0.02,
+    "epsilon_decay_steps": 8500,
+    "gradient_norm_clip": 5.0,
+    "expert_margin": 0.8,
+    "margin_weight": 0.8
+  },
+  "experiment": {
+    "training_seeds": [17, 29, 43],
+    "training_episodes_per_seed": 280,
+    "standard_evaluation_episodes_per_baseline": 30,
+    "sensitivity_episodes_per_condition": 20,
+    "standard_evaluation_seed_formula": "300000 + 97*i",
+    "sensitivity_seed_formula": "400000 + 10000*rate_index + 53*i"
+  }
+}

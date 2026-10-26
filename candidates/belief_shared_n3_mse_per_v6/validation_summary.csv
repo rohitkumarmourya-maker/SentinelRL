@@ -1,0 +1,5 @@
+policy,seed,episodes,return,total_compromises,critical_compromises,uncontained_at_end,false_isolations,successful_isolations,action_costs,invalid_actions,confirmed_fraction,censored_confirmation_delay
+alert_rule,0,0,-13.3008839425087,2.3,0.715,0.865,0.0,1.435,6.0,0.0,0.8608333333333333,6.635250000000001
+champion,101,2000,-6.589360079190132,1.06,0.05,0.005,2.295,1.055,6.0,0.0,0.0,47.96625
+champion,101,5000,-4.388154494553804,1.155,0.095,0.08,0.965,1.075,6.0,0.0,0.021,46.79183333333334
+champion,101,10000,-3.543459492492675,1.24,0.11,0.045,0.485,1.195,5.91,0.0,0.26016666666666666,35.86741666666667

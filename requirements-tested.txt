@@ -1,7 +1,7 @@
-# Exact versions from the execution environment used for the recorded results.
-# Use requirements.txt for a broader compatible dependency range.
-numpy==2.3.5
-pandas==2.2.3
-matplotlib==3.10.8
-torch==2.10.0
-pytest==9.0.2
+# Actual recorded CPU run and35passing tests used these versions on Python3.12.5.
+# Fresh virtual-environment installation was not repeated during delivery.
+numpy==2.2.6
+matplotlib==3.9.2
+torch==2.8.0
+pytest==9.0.3
+pandas==2.2.2

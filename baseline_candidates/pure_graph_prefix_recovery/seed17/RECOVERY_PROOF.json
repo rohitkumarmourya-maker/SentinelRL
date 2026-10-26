@@ -1,0 +1,14 @@
+{
+  "seed": 17,
+  "episodes_replayed": 10000,
+  "actual_recovery_environment_steps": 480000,
+  "actual_recovery_gradient_updates": 62211,
+  "elapsed_seconds": 192.98867020800026,
+  "original20k_checkpoint_unchanged": true,
+  "initial_parameter_hash_match": true,
+  "all10000raw_rows_all_numeric_fields_match": true,
+  "maximum_numeric_difference": 0.0,
+  "excluded_field": "elapsed_seconds",
+  "recovered_checkpoint_sha256": "d0337809e5ecd772fa6d2d7c836977768d28f76119f17b9a8df97f52729f9572",
+  "no_original10k_reference_hash_existed": true
+}

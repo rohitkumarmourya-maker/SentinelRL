@@ -1,0 +1,26 @@
+{
+  "status": "PARTIAL_COMPLETE_REMAINDER_DELEGATED",
+  "at_utc": "2026-10-26T12:23:14.681798+00:00",
+  "completed20k_seeds": [
+    17
+  ],
+  "delegated_seeds": [
+    29,
+    43
+  ],
+  "reason": "Parent selected prospective uniform10k+20k temporalensemble; remaining seeds restartidenticaltraining with both checkpointtimes retained",
+  "partial_duplicate_work": {
+    "29": {
+      "logged_episodes": 6000,
+      "logged_steps": 288000,
+      "logged_updates": 36569,
+      "logged_elapsed_seconds": 92.41294291599843
+    }
+  },
+  "unlogged_in_progress_steps_may_exist": true,
+  "completed20k_weights_unchanged": {
+    "17": "0c917d265eea5b4601347541ca38d6809158edd18dceb42fc58d5af795d3f326"
+  },
+  "missing10k_recovery": "separate deterministicprefixreplay for completed17/71 only; actualtimestamps, no relabeling",
+  "test_scenarios_used": false
+}

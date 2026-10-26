@@ -1,0 +1,186 @@
+{
+  "family": "final_v5_temporal",
+  "status": "TRAINING_COMPLETE_VALIDATED",
+  "created_utc": "2026-10-26T12:31:06.707263+00:00",
+  "selection_authority": "Parent authorized fixed V5 MSE fresh seeds17,29,43,71,89 at20k with10k+20k uniform temporal Q averaging, before any final test.",
+  "selected_development_family": "belief_shared_n3_mse_v5",
+  "training_seeds": [
+    17,
+    29,
+    43,
+    71,
+    89
+  ],
+  "training_episodes_per_seed": 20000,
+  "prespecified_checkpoint_episodes": [
+    10000,
+    20000
+  ],
+  "training_scenario_rule": "1000000*training_seed+episode_index",
+  "deployment_members": 10,
+  "independent_training_runs": 5,
+  "independent_deployment_ensembles": 1,
+  "member_weights": [
+    0.1,
+    0.1,
+    0.1,
+    0.1,
+    0.1,
+    0.1,
+    0.1,
+    0.1,
+    0.1,
+    0.1
+  ],
+  "selected_template": "candidates/belief_shared_n3_mse_v5/seed101_ep20000.pt",
+  "selected_template_sha256": "be002febdc1ffcab5a602cd853b85470f88d50475ee213cc2aaddc93e8d0b8b7",
+  "configuration": {
+    "gamma": 1.0,
+    "representation": "sufficient",
+    "architecture": "shared_host",
+    "learning_rate": 0.0003,
+    "batch_size": 128,
+    "replay_capacity": 30000,
+    "learning_starts": 1000,
+    "train_every": 1,
+    "target_sync_updates": 500,
+    "epsilon_start": 1.0,
+    "epsilon_end": 0.02,
+    "epsilon_decay_steps": 240000,
+    "hidden_size": 128,
+    "n_step": 3,
+    "grad_clip": 10.0,
+    "huber_beta": 5.0,
+    "td_loss": "mse",
+    "compress_forced_wait": true
+  },
+  "environment": {
+    "horizon": 48,
+    "response_budget": 6,
+    "attack_base_probability": 0.23,
+    "alert_sensitivity": 0.55,
+    "false_positive_rate": 0.08,
+    "patch_multiplier": 0.2,
+    "decoy_multiplier": 0.25,
+    "alert_ema_alpha": 0.35
+  },
+  "source_sha256_common": {
+    "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+    "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+    "src/champion.py": "014a875fbecd4f758ea62a3e6b019bdca3e42f0458b2a94ef9f6fd9e20854987",
+    "train_candidate.py": "31cac8e569b2f737c8b8c4e4d3740cf3b8775e5d7ead88c57e75ba3c5dfa7333",
+    "train_final.py": "408fb2eec9f072e1b70a9f9d8b5b382d833dbef01bb4fecdee40fc0e6d436af5"
+  },
+  "all_worker_sources_and_configurations_equal": true,
+  "worker_manifests": {
+    "17": "candidates/final_v5_temporal_seed17/manifest.json",
+    "29": "candidates/final_v5_temporal_seed29/manifest.json",
+    "43": "candidates/final_v5_temporal_seed43/manifest.json",
+    "71": "candidates/final_v5_temporal_seed71/manifest.json",
+    "89": "candidates/final_v5_temporal_seed89/manifest.json"
+  },
+  "planned_checkpoints": {
+    "17": {
+      "10000": "candidates/final_v5_temporal_seed17/seed17_ep10000.pt",
+      "20000": "candidates/final_v5_temporal_seed17/seed17_ep20000.pt"
+    },
+    "29": {
+      "10000": "candidates/final_v5_temporal_seed29/seed29_ep10000.pt",
+      "20000": "candidates/final_v5_temporal_seed29/seed29_ep20000.pt"
+    },
+    "43": {
+      "10000": "candidates/final_v5_temporal_seed43/seed43_ep10000.pt",
+      "20000": "candidates/final_v5_temporal_seed43/seed43_ep20000.pt"
+    },
+    "71": {
+      "10000": "candidates/final_v5_temporal_seed71/seed71_ep10000.pt",
+      "20000": "candidates/final_v5_temporal_seed71/seed71_ep20000.pt"
+    },
+    "89": {
+      "10000": "candidates/final_v5_temporal_seed89/seed89_ep10000.pt",
+      "20000": "candidates/final_v5_temporal_seed89/seed89_ep20000.pt"
+    }
+  },
+  "initial_checkpoint_sha256": {
+    "17": "25425141eb100bf836b826f51f7ce160a92ce019d977aab4d9149b591e13edb1",
+    "29": "d233cdbd9f6e159ce1078ad437c7ae1e053e40ca3791570bcb72e07eee635522",
+    "43": "b8b35b2463cca2f2a491c1acd6818678babeb5a32c5c221ace0eb713214634b6",
+    "71": "50bb9a2fc3ad187694a47a719c0b03cb8f4f431372135eeb26322ec68f13c19d",
+    "89": "20a8a92e4adee2cf35cba41eb828f859fd1b56b9b8509edf3bb01915dfe6ceec"
+  },
+  "initial_parameter_hashes": {
+    "17": "3aa6e5eb32a6cbd77234098d47901cb9f39bbd5fe149cd78502a4a3f95591fe8",
+    "29": "a924fd3ae7dcb25dfa83839f4fa731309eb99743678e8506243d66ec8d1c3d1e",
+    "43": "4308620982addef18dd2d2d8f7c88bb241ab7cd14ff67556af1f202efe22f4a5",
+    "71": "fc2a2ec3396bf8b4cc50891830ad090529c5f53079d092ed385f5b6165811b12",
+    "89": "43bdf52d71614dc37cbf18ad2383f351bc310806ac97af9fa51192b72dcc5d18"
+  },
+  "completed_training_seeds": [
+    17,
+    29,
+    43,
+    71,
+    89
+  ],
+  "final_test_executed": false,
+  "new_seed_validation_executed": true,
+  "development_temporal_validation_return": -1.6769529810249804,
+  "algorithm_configuration_deployment_frozen": true,
+  "frozen_utc": "2026-10-26T12:32:38.206825+00:00",
+  "freeze_authority": "Parent accepted V5 MSE fixed configuration and uniform all5trainingseeds\u00d7[10000,20000] before any final outcomes; no member/subset/weight selection.",
+  "new_seed_validation_role": "development-only deployment sanity and descriptive individual robustness; never member selection",
+  "checkpoint_sha256": {
+    "candidates/final_v5_temporal_seed17/seed17_ep10000.pt": "37b8701d3723e20460ae0e1247ad12489e2a7cfc50478a4550398cd9e39c6822",
+    "candidates/final_v5_temporal_seed17/seed17_ep20000.pt": "8df44e57d3a56b42bfc75659d4e0112174b4a38e93a18f298ac3eb116020222e",
+    "candidates/final_v5_temporal_seed29/seed29_ep10000.pt": "cf99c26587717ae01cba0e72d5dfa7ff8c424b0c9556a727a8de05cd292c6758",
+    "candidates/final_v5_temporal_seed29/seed29_ep20000.pt": "a1a6cde97c8b3f00c38ced7da41e27acf3b756281d91331ca832c6a116524754",
+    "candidates/final_v5_temporal_seed43/seed43_ep10000.pt": "f3decc7469f597feaab7961b2b5875530bfb9e78056eb9dcdffba7e3afd05617",
+    "candidates/final_v5_temporal_seed43/seed43_ep20000.pt": "936dbe77eefb71e675c404ba308b90bb097c9636268180cffbc86f2f43f6883f",
+    "candidates/final_v5_temporal_seed71/seed71_ep10000.pt": "4dcf9dbe9cb9a30764317f7dd35911ebab62baaa5d5d8f308a328869085b0964",
+    "candidates/final_v5_temporal_seed71/seed71_ep20000.pt": "e268668a01f2b6b329661c900a6313f08205df997f0f16e8be82e09922a591f5",
+    "candidates/final_v5_temporal_seed89/seed89_ep10000.pt": "35743cc4b621e37e0353bdf771084f0c597c5a2062c29e46849d51970fa982ab",
+    "candidates/final_v5_temporal_seed89/seed89_ep20000.pt": "f3bf61bf13773e17347bba1a031f05123fc3073e0bad1b4930f176e9c494b289"
+  },
+  "training_evidence": {
+    "17": {
+      "environment_steps": 960000,
+      "updates": 380253,
+      "decision_transitions": 381250,
+      "initial_parameter_hash": "3aa6e5eb32a6cbd77234098d47901cb9f39bbd5fe149cd78502a4a3f95591fe8",
+      "parameter_hash": "a9aa8c38b56b054dc9e99eba40ebbfabaa7a4f3cf07219cdb12a3cf158bf0a0a"
+    },
+    "29": {
+      "environment_steps": 960000,
+      "updates": 350544,
+      "decision_transitions": 351543,
+      "initial_parameter_hash": "a924fd3ae7dcb25dfa83839f4fa731309eb99743678e8506243d66ec8d1c3d1e",
+      "parameter_hash": "94c33f3b0f828e7518026afd560c1c71125314002149c208d390388d272660d6"
+    },
+    "43": {
+      "environment_steps": 960000,
+      "updates": 327712,
+      "decision_transitions": 328710,
+      "initial_parameter_hash": "4308620982addef18dd2d2d8f7c88bb241ab7cd14ff67556af1f202efe22f4a5",
+      "parameter_hash": "e6b66aa2af0077fcb1f3764a45f82eb6f050ac5407ff6142c5f1fa54dc6f48e7"
+    },
+    "71": {
+      "environment_steps": 960000,
+      "updates": 308781,
+      "decision_transitions": 309780,
+      "initial_parameter_hash": "fc2a2ec3396bf8b4cc50891830ad090529c5f53079d092ed385f5b6165811b12",
+      "parameter_hash": "d3f9d4b62cc867163d9f79a09332659fbff5d0fb02b83a0e0700e08950750572"
+    },
+    "89": {
+      "environment_steps": 960000,
+      "updates": 351745,
+      "decision_transitions": 352738,
+      "initial_parameter_hash": "43bdf52d71614dc37cbf18ad2383f351bc310806ac97af9fa51192b72dcc5d18",
+      "parameter_hash": "176595174fa9003a116b7214f9029fb4f3063c54dc297637ead582ef5cc47577"
+    }
+  },
+  "actual_total_environment_steps": 4800000,
+  "new_seed_validation_path": "validation/final_v5_temporal_sanity",
+  "new_seed_validation_ensemble_return": -1.8568534810483448,
+  "individual20k_return_mean": -2.9847777868753664,
+  "individual20k_return_seed_sd": 0.41476984951120965
+}

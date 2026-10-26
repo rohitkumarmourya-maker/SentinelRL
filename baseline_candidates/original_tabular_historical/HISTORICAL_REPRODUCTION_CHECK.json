@@ -1,0 +1,26 @@
+{
+  "status": "MATCHES_ORIGINAL_REPRODUCTION",
+  "metrics": {
+    "episode_return": {
+      "mean": -3.018484435717265,
+      "scenario_sd": 5.161114151422183
+    },
+    "critical_compromises": {
+      "mean": 0.13333333333333333,
+      "scenario_sd": 0.34574590364176044
+    },
+    "active_compromised_at_end": {
+      "mean": 0.2555555555555556,
+      "scenario_sd": 0.6353768202442577
+    },
+    "mean_detection_delay": {
+      "mean": 39.5037037037037,
+      "scenario_sd": 8.084035180829032
+    },
+    "false_isolations": {
+      "mean": 0.5999999999999999,
+      "scenario_sd": 0.3545003499071492
+    }
+  },
+  "actual_Q_tables_saved": true
+}

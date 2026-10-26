@@ -1,0 +1,29 @@
+{
+  "policy": "arithmetic_mean_learned_q",
+  "candidate": "belief_dueling_n3_v1",
+  "training_episodes_per_member": 20000,
+  "training_seeds": [
+    101,
+    202
+  ],
+  "members": 2,
+  "independent_ensembles": 1,
+  "validation_scenario_rule": "600000+101*i",
+  "validation_scenarios": 200,
+  "test_scenarios_used": false,
+  "checkpoint_sha256": {
+    "seed101_ep20000.pt": "c3da8106294d3415a7242ea42896d15a7445a63d8764cb402f580778c7ae4ff6",
+    "seed202_ep20000.pt": "7f7f991a732751759985237206b5b4ed73c7262e154becbe27d457f397223626"
+  },
+  "ensemble_source_sha256": "75208ca5e6191914bd79a02c27acd32cb913b4745cc9730efed6f62bcf683dda",
+  "return": -3.47219698561728,
+  "total_compromises": 1.235,
+  "critical_compromises": 0.14,
+  "uncontained_at_end": 0.11,
+  "false_isolations": 0.215,
+  "successful_isolations": 1.125,
+  "action_costs": 6.0,
+  "invalid_actions": 0.0,
+  "confirmed_fraction": 0.04658333333333333,
+  "censored_confirmation_delay": 45.53291666666667
+}

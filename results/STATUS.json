@@ -1,0 +1,12 @@
+{
+  "status": "COMPLETE",
+  "final_scenarios": 10000,
+  "raw_episodes": 520000,
+  "required_return_contrasts": 55,
+  "adjusted_positive": 54,
+  "exception": "tuned_belief_threshold; pointestimate better, difference inconclusive",
+  "all_original_models_and_retrained_RL_comparators_return_advantage": true,
+  "universal_win_claim": false,
+  "protocol_sha256": "ad11c25a5389477c4351c11047b89fb48aca57f81b732b30795a77646bbccecf",
+  "no_test_based_tuning": true
+}

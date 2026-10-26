@@ -1,0 +1,119 @@
+{
+  "family": "belief_context_n3_v7",
+  "status": "COMPLETE",
+  "training_seeds": [
+    101,
+    202
+  ],
+  "training_episodes_per_seed": 20000,
+  "config": {
+    "gamma": 1.0,
+    "representation": "sufficient",
+    "architecture": "contextual_host",
+    "learning_rate": 0.0003,
+    "batch_size": 128,
+    "replay_capacity": 30000,
+    "learning_starts": 1000,
+    "train_every": 1,
+    "target_sync_updates": 500,
+    "epsilon_start": 1.0,
+    "epsilon_end": 0.02,
+    "epsilon_decay_steps": 240000,
+    "hidden_size": 128,
+    "n_step": 3,
+    "grad_clip": 10.0,
+    "huber_beta": 5.0,
+    "td_loss": "huber",
+    "prioritized_replay": false,
+    "priority_alpha": 0.6,
+    "importance_beta": 0.4,
+    "importance_anneal_updates": 200000,
+    "compress_forced_wait": true
+  },
+  "source_sha256": {
+    "src/environment.py": "380ce011238de984e0867f1ec78651b266bf77f9d408793310c14df783a11152",
+    "src/belief.py": "f2aa2e6728f195402cc197c4ffa3f8024b2af497d7d257300faa9673d5c467de",
+    "src/champion.py": "dbf8c7c2b9c312660d0214a796709d9c3f0dbaca6b2d6ff37c1aeb494708c92f",
+    "train_candidate.py": "2fa80c3a02107b88a6db7816165ec3c462333681c469ef8d18795fa91ae951b1"
+  },
+  "workers": {
+    "101": "belief_context_n3_v7",
+    "202": "belief_context_n3_v7_seed202"
+  },
+  "split_reason": "Parallelize the two preregistered development training seeds without adding a configuration; original sequential worker will stop after seed101 checkpoint.",
+  "test_scenarios_used": false,
+  "actual_completed_training_seeds": [
+    101,
+    202
+  ],
+  "seed101_validation20k": {
+    "policy": "champion",
+    "seed": 101,
+    "episodes": 20000,
+    "return": -2.2232794765502217,
+    "total_compromises": 1.215,
+    "critical_compromises": 0.09,
+    "uncontained_at_end": 0.065,
+    "false_isolations": 0.175,
+    "successful_isolations": 1.15,
+    "action_costs": 2.745,
+    "invalid_actions": 0.0,
+    "confirmed_fraction": 0.16958333333333336,
+    "censored_confirmation_delay": 39.78541666666666
+  },
+  "checkpoint_evidence": {
+    "101": {
+      "checkpoint": "candidates/belief_context_n3_v7/seed101_ep20000.pt",
+      "checkpoint_sha256": "ee33e8eb5a18ef78af4ce72fc21fc381e516d604cf53ab5216fba76b20c4a9c4",
+      "environment_steps": 960000,
+      "updates": 380853,
+      "decision_transitions": 381847,
+      "validation_return": -2.2232794765502217
+    },
+    "202": {
+      "checkpoint": "candidates/belief_context_n3_v7_seed202/seed202_ep20000.pt",
+      "checkpoint_sha256": "27ca205843be9527f7f8f24ba7b53d05f693c0226485384c876470fd9be84879",
+      "environment_steps": 960000,
+      "updates": 397985,
+      "decision_transitions": 398978,
+      "validation_return": -2.9068809849500643
+    }
+  },
+  "validation_individual_mean": -2.565080230750143,
+  "validation_pair_ensemble": {
+    "policy": "arithmetic_mean_learned_q",
+    "candidate": "belief_context_n3_v7",
+    "training_episodes_per_member": 20000,
+    "training_seeds": [
+      101,
+      202
+    ],
+    "member_candidates": [
+      "belief_context_n3_v7",
+      "belief_context_n3_v7_seed202"
+    ],
+    "members": 2,
+    "independent_ensembles": 1,
+    "validation_scenario_rule": "600000+101*i",
+    "validation_scenarios": 200,
+    "test_scenarios_used": false,
+    "checkpoint_sha256": {
+      "seed101_ep20000.pt": "ee33e8eb5a18ef78af4ce72fc21fc381e516d604cf53ab5216fba76b20c4a9c4",
+      "seed202_ep20000.pt": "27ca205843be9527f7f8f24ba7b53d05f693c0226485384c876470fd9be84879"
+    },
+    "ensemble_source_sha256": "b1f3e43a49f8da0c602f0a73ce80bf4dcb76e0076ba482490290e84a57a55947",
+    "return": -2.228743490377068,
+    "total_compromises": 1.23,
+    "critical_compromises": 0.11,
+    "uncontained_at_end": 0.035,
+    "false_isolations": 0.13,
+    "successful_isolations": 1.195,
+    "action_costs": 3.4,
+    "invalid_actions": 0.0,
+    "confirmed_fraction": 0.16991666666666666,
+    "censored_confirmation_delay": 39.707249999999995
+  },
+  "redundant_training_work": false,
+  "selected_for_fresh_final_training": false,
+  "selection_reason": "V7 repairs remote deployment context expressivity but its pair mean-Q validation return -2.22874 is below the parent-prespecified V5 temporal mean-Q return -1.67695 at the same200 development scenarios."
+}

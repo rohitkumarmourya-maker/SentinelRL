@@ -1,0 +1,34 @@
+{
+  "policy": "equal_mean_learned_q_over_training_seeds_and_prespecified_times",
+  "training_seeds": [
+    101,
+    202
+  ],
+  "training_episodes": [
+    10000,
+    20000
+  ],
+  "members": 4,
+  "independent_training_runs": 2,
+  "independent_ensembles": 1,
+  "selection_scope": "single parent-prespecified temporal-Q validation candidate; no checkpoint-combination grid",
+  "validation_scenarios": 200,
+  "validation_scenario_rule": "600000+101*i",
+  "final_test_executed": false,
+  "checkpoint_sha256": {
+    "seed101_ep10000.pt": "77490c57caec258ad8a2f2c0e3d665fc5cb80f0e4c30d0395dc1f33a83370466",
+    "seed101_ep20000.pt": "be002febdc1ffcab5a602cd853b85470f88d50475ee213cc2aaddc93e8d0b8b7",
+    "seed202_ep10000.pt": "a5932ae91176dfa81df4cc66bb63ab5fad6112d912bb4ac3dd18515f64b3fb61",
+    "seed202_ep20000.pt": "a1736babd05a8520cfd0dcd2220b8c9009a04cf9b194a53169ec12001b235e24"
+  },
+  "return": -1.6769529810249804,
+  "total_compromises": 1.125,
+  "critical_compromises": 0.075,
+  "uncontained_at_end": 0.01,
+  "false_isolations": 0.21,
+  "successful_isolations": 1.115,
+  "action_costs": 3.045,
+  "invalid_actions": 0.0,
+  "confirmed_fraction": 0.13416666666666666,
+  "censored_confirmation_delay": 41.67583333333334
+}

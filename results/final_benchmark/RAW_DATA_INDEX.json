@@ -1,0 +1,7 @@
+{
+  "episodes_csv_sha256": "8584754be2a518fb887d01a12e7e8983178311203c25b8781348dd91a3e4b0f6",
+  "episodes_csv_bytes": 344897338,
+  "git_payload": "episodes.csv.gz plus immutable chunks; consolidated rawCSV also inZIP",
+  "reconstruction": "python scripts/reconstruct_results.py",
+  "gzip_bytes": 16747866
+}

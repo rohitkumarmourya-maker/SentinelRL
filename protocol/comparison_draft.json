@@ -1,0 +1,413 @@
+{
+  "status": "DRAFT_PENDING_COMPLETE_WEIGHTS_AND_PARENT_REVIEW",
+  "primary_policy": "champion_temporal_ensemble",
+  "policies": [
+    {
+      "name": "champion_temporal_ensemble",
+      "kind": "ensemble",
+      "subtype": "snapshot_learned",
+      "members": [
+        {
+          "member_id": "seed17_ep10000",
+          "training_seed": 17,
+          "training_episodes": 10000,
+          "checkpoint": "candidates/final_v5_temporal_seed17/seed17_ep10000.pt"
+        },
+        {
+          "member_id": "seed17_ep20000",
+          "training_seed": 17,
+          "training_episodes": 20000,
+          "checkpoint": "candidates/final_v5_temporal_seed17/seed17_ep20000.pt"
+        },
+        {
+          "member_id": "seed29_ep10000",
+          "training_seed": 29,
+          "training_episodes": 10000,
+          "checkpoint": "candidates/final_v5_temporal_seed29/seed29_ep10000.pt"
+        },
+        {
+          "member_id": "seed29_ep20000",
+          "training_seed": 29,
+          "training_episodes": 20000,
+          "checkpoint": "candidates/final_v5_temporal_seed29/seed29_ep20000.pt"
+        },
+        {
+          "member_id": "seed43_ep10000",
+          "training_seed": 43,
+          "training_episodes": 10000,
+          "checkpoint": "candidates/final_v5_temporal_seed43/seed43_ep10000.pt"
+        },
+        {
+          "member_id": "seed43_ep20000",
+          "training_seed": 43,
+          "training_episodes": 20000,
+          "checkpoint": "candidates/final_v5_temporal_seed43/seed43_ep20000.pt"
+        },
+        {
+          "member_id": "seed71_ep10000",
+          "training_seed": 71,
+          "training_episodes": 10000,
+          "checkpoint": "candidates/final_v5_temporal_seed71/seed71_ep10000.pt"
+        },
+        {
+          "member_id": "seed71_ep20000",
+          "training_seed": 71,
+          "training_episodes": 20000,
+          "checkpoint": "candidates/final_v5_temporal_seed71/seed71_ep20000.pt"
+        },
+        {
+          "member_id": "seed89_ep10000",
+          "training_seed": 89,
+          "training_episodes": 10000,
+          "checkpoint": "candidates/final_v5_temporal_seed89/seed89_ep10000.pt"
+        },
+        {
+          "member_id": "seed89_ep20000",
+          "training_seed": 89,
+          "training_episodes": 20000,
+          "checkpoint": "candidates/final_v5_temporal_seed89/seed89_ep20000.pt"
+        }
+      ],
+      "member_weight": "uniform1/10",
+      "model_seeds": [
+        0
+      ]
+    },
+    {
+      "name": "champion_individual_20k",
+      "kind": "checkpoint",
+      "checkpoints": {
+        "17": "candidates/final_v5_temporal_seed17/seed17_ep20000.pt",
+        "29": "candidates/final_v5_temporal_seed29/seed29_ep20000.pt",
+        "43": "candidates/final_v5_temporal_seed43/seed43_ep20000.pt",
+        "71": "candidates/final_v5_temporal_seed71/seed71_ep20000.pt",
+        "89": "candidates/final_v5_temporal_seed89/seed89_ep20000.pt"
+      },
+      "report_only": true
+    },
+    {
+      "name": "previous_ddqn",
+      "kind": "comparator",
+      "comparator": "previous_ddqn",
+      "model_seeds": [
+        17,
+        29,
+        43
+      ]
+    },
+    {
+      "name": "previous_no_memory",
+      "kind": "comparator",
+      "comparator": "previous_no_memory",
+      "model_seeds": [
+        17,
+        29,
+        43
+      ]
+    },
+    {
+      "name": "previous_tabular",
+      "kind": "comparator",
+      "comparator": "previous_tabular",
+      "model_seeds": [
+        17,
+        29,
+        43
+      ]
+    },
+    {
+      "name": "previous_alert_rule",
+      "kind": "comparator",
+      "comparator": "previous_alert_rule",
+      "model_seeds": [
+        0
+      ]
+    },
+    {
+      "name": "original_alert",
+      "kind": "comparator",
+      "comparator": "original_alert",
+      "model_seeds": [
+        0
+      ]
+    },
+    {
+      "name": "original_threshold",
+      "kind": "comparator",
+      "comparator": "original_threshold",
+      "model_seeds": [
+        0
+      ]
+    },
+    {
+      "name": "original_patch",
+      "kind": "comparator",
+      "comparator": "original_patch",
+      "model_seeds": [
+        0
+      ]
+    },
+    {
+      "name": "original_random",
+      "kind": "comparator",
+      "comparator": "original_random",
+      "model_seeds": [
+        0
+      ]
+    },
+    {
+      "name": "original_full_transfer",
+      "kind": "comparator",
+      "comparator": "original_full_transfer",
+      "model_seeds": [
+        17,
+        29,
+        43
+      ]
+    },
+    {
+      "name": "original_no_stealth_transfer",
+      "kind": "comparator",
+      "comparator": "original_no_stealth_transfer",
+      "model_seeds": [
+        17,
+        29,
+        43
+      ]
+    },
+    {
+      "name": "original_full_ensemble",
+      "kind": "ensemble",
+      "subtype": "original",
+      "member_seeds": [
+        17,
+        29,
+        43
+      ],
+      "model_seeds": [
+        0
+      ],
+      "no_stealth": false
+    },
+    {
+      "name": "original_no_stealth_ensemble",
+      "kind": "ensemble",
+      "subtype": "original",
+      "member_seeds": [
+        17,
+        29,
+        43
+      ],
+      "model_seeds": [
+        0
+      ],
+      "no_stealth": true
+    },
+    {
+      "name": "previous_ddqn_ensemble",
+      "kind": "ensemble",
+      "subtype": "previous",
+      "member_seeds": [
+        17,
+        29,
+        43
+      ],
+      "model_seeds": [
+        0
+      ],
+      "comparator": "previous_ddqn"
+    },
+    {
+      "name": "previous_no_memory_ensemble",
+      "kind": "ensemble",
+      "subtype": "previous",
+      "member_seeds": [
+        17,
+        29,
+        43
+      ],
+      "model_seeds": [
+        0
+      ],
+      "comparator": "previous_no_memory"
+    },
+    {
+      "name": "original_tabular_transfer",
+      "kind": "tabular_checkpoint",
+      "checkpoints": {
+        "17": "baseline_candidates/original_tabular_historical/seed17_ep280.json",
+        "29": "baseline_candidates/original_tabular_historical/seed29_ep280.json",
+        "43": "baseline_candidates/original_tabular_historical/seed43_ep280.json"
+      },
+      "trained_mode": "historical"
+    },
+    {
+      "name": "original_tabular_retrained",
+      "kind": "tabular_checkpoint",
+      "checkpoints": {
+        "17": "baseline_candidates/final_original_tabular_a/seed17_ep20000.json",
+        "29": "baseline_candidates/final_original_tabular_a/seed29_ep20000.json",
+        "43": "baseline_candidates/final_original_tabular_b/seed43_ep20000.json",
+        "71": "baseline_candidates/final_original_tabular_b/seed71_ep20000.json",
+        "89": "baseline_candidates/final_original_tabular_c/seed89_ep20000.json"
+      },
+      "trained_mode": "lawful"
+    },
+    {
+      "name": "graph_pure_individual_20k",
+      "kind": "checkpoint",
+      "checkpoints": {
+        "17": "baseline_candidates/final_graph_pure_a/seed17_ep20000.pt",
+        "29": "baseline_candidates/final_graph_pure_temporal_a/seed29_ep20000.pt",
+        "43": "baseline_candidates/final_graph_pure_temporal_a/seed43_ep20000.pt",
+        "71": "baseline_candidates/final_graph_pure_b/seed71_ep20000.pt",
+        "89": "baseline_candidates/final_graph_pure_temporal_b/seed89_ep20000.pt"
+      }
+    },
+    {
+      "name": "graph_pure_temporal_ensemble",
+      "kind": "ensemble",
+      "subtype": "snapshot_learned",
+      "members": [
+        {
+          "member_id": "seed17_ep10000",
+          "training_seed": 17,
+          "training_episodes": 10000,
+          "checkpoint": "baseline_candidates/pure_graph_prefix_recovery/seed17/seed17_ep10000.pt"
+        },
+        {
+          "member_id": "seed17_ep20000",
+          "training_seed": 17,
+          "training_episodes": 20000,
+          "checkpoint": "baseline_candidates/final_graph_pure_a/seed17_ep20000.pt"
+        },
+        {
+          "member_id": "seed29_ep10000",
+          "training_seed": 29,
+          "training_episodes": 10000,
+          "checkpoint": "baseline_candidates/final_graph_pure_temporal_a/seed29_ep10000.pt"
+        },
+        {
+          "member_id": "seed29_ep20000",
+          "training_seed": 29,
+          "training_episodes": 20000,
+          "checkpoint": "baseline_candidates/final_graph_pure_temporal_a/seed29_ep20000.pt"
+        },
+        {
+          "member_id": "seed43_ep10000",
+          "training_seed": 43,
+          "training_episodes": 10000,
+          "checkpoint": "baseline_candidates/final_graph_pure_temporal_a/seed43_ep10000.pt"
+        },
+        {
+          "member_id": "seed43_ep20000",
+          "training_seed": 43,
+          "training_episodes": 20000,
+          "checkpoint": "baseline_candidates/final_graph_pure_temporal_a/seed43_ep20000.pt"
+        },
+        {
+          "member_id": "seed71_ep10000",
+          "training_seed": 71,
+          "training_episodes": 10000,
+          "checkpoint": "baseline_candidates/pure_graph_prefix_recovery/seed71/seed71_ep10000.pt"
+        },
+        {
+          "member_id": "seed71_ep20000",
+          "training_seed": 71,
+          "training_episodes": 20000,
+          "checkpoint": "baseline_candidates/final_graph_pure_b/seed71_ep20000.pt"
+        },
+        {
+          "member_id": "seed89_ep10000",
+          "training_seed": 89,
+          "training_episodes": 10000,
+          "checkpoint": "baseline_candidates/final_graph_pure_temporal_b/seed89_ep10000.pt"
+        },
+        {
+          "member_id": "seed89_ep20000",
+          "training_seed": 89,
+          "training_episodes": 20000,
+          "checkpoint": "baseline_candidates/final_graph_pure_temporal_b/seed89_ep20000.pt"
+        }
+      ],
+      "model_seeds": [
+        0
+      ]
+    },
+    {
+      "name": "graph_pure_20k_ensemble",
+      "kind": "ensemble",
+      "subtype": "snapshot_learned",
+      "checkpoints": {
+        "17": "baseline_candidates/final_graph_pure_a/seed17_ep20000.pt",
+        "29": "baseline_candidates/final_graph_pure_temporal_a/seed29_ep20000.pt",
+        "43": "baseline_candidates/final_graph_pure_temporal_a/seed43_ep20000.pt",
+        "71": "baseline_candidates/final_graph_pure_b/seed71_ep20000.pt",
+        "89": "baseline_candidates/final_graph_pure_temporal_b/seed89_ep20000.pt"
+      },
+      "model_seeds": [
+        0
+      ]
+    },
+    {
+      "name": "graph_prior_shield_td_retrained",
+      "kind": "checkpoint",
+      "checkpoints": {
+        "17": "baseline_candidates/final_graph_prior_td_a/seed17_ep20000.pt",
+        "29": "baseline_candidates/final_graph_prior_td_a/seed29_ep20000.pt",
+        "43": "baseline_candidates/final_graph_prior_td_b/seed43_ep20000.pt",
+        "71": "baseline_candidates/final_graph_prior_td_b/seed71_ep20000.pt",
+        "89": "baseline_candidates/final_graph_prior_td_c/seed89_ep20000.pt"
+      }
+    },
+    {
+      "name": "tuned_belief_threshold",
+      "kind": "threshold",
+      "configuration": {
+        "isolation_threshold": 0.5,
+        "inspection_threshold": 0.2,
+        "protection": false
+      }
+    },
+    {
+      "name": "no_op",
+      "kind": "no_op"
+    }
+  ],
+  "required_comparators": [
+    "previous_ddqn",
+    "previous_no_memory",
+    "previous_tabular",
+    "previous_alert_rule",
+    "original_alert",
+    "original_threshold",
+    "original_patch",
+    "original_random",
+    "original_full_transfer",
+    "original_no_stealth_transfer",
+    "original_full_ensemble",
+    "original_no_stealth_ensemble",
+    "previous_ddqn_ensemble",
+    "previous_no_memory_ensemble",
+    "original_tabular_transfer",
+    "original_tabular_retrained",
+    "graph_pure_individual_20k",
+    "graph_pure_temporal_ensemble",
+    "graph_pure_20k_ensemble",
+    "graph_prior_shield_td_retrained",
+    "tuned_belief_threshold",
+    "no_op"
+  ],
+  "final_scenarios": 10000,
+  "final_seed_base": 900000000,
+  "final_seed_stride": 103,
+  "bootstrap_replicates": 50000,
+  "include_fixed_checkpoint_comparisons": true,
+  "selection": "V5MSEarchitecture/config fixed from development; uniformall5freshseeds\u00d710k/20k; no furtherarchitecture/member/weight selection",
+  "closed_family_scope": "common corrected task only; primary return; secondary metrics exploratory; oldenvironment reproduction separate",
+  "independence": "primary onefixed10memberensemble from5trainingseeds; individual20kseedoutcomes reportonly; comparatorfamilies retainactualunequalseedaxes",
+  "prospective_amendments": [
+    "10000scenarios/50000bootstrap chosen for power before outcomes",
+    "base900million avoids originalexpert collision1450020;900000 proposal neverexecuted"
+  ]
+}

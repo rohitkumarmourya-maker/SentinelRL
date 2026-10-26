@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-26",
+  "python": "3.12.5",
+  "pytest_command": "python3 -m pytest -q",
+  "non_model_tests_passed": 31,
+  "model_tests_deselected": 0,
+  "syntax_compilation": "passed",
+  "environment_api_exercise": "passed",
+  "run_all_default": "dry_run_only_passed",
+  "revised_training_executed": true,
+  "revised_model_inference_executed": true,
+  "revised_evaluation_executed": true,
+  "revised_model_forward_tests_executed": true,
+  "status": "COMPLETE_AFTER_USER_AUTHORIZATION",
+  "initial_non_model_test_record": {
+    "passed": 31,
+    "model_tests_deselected": 4
+  },
+  "all_tests_passed": 35,
+  "model_tests_passed": 4,
+  "saved_episode_replay": "passed_exact_metrics_and25actioncounts",
+  "training_runs": 9,
+  "heldout_episode_rows": 8400,
+  "source_sha256": "342709f0edec919c70b44d35d814ab56161f126926482ef0b35e21171220c40e"
+}

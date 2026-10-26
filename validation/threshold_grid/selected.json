@@ -1,0 +1,14 @@
+{
+  "selection": {
+    "configuration": 2,
+    "isolation_threshold": 0.5,
+    "inspection_threshold": 0.2,
+    "protection": false,
+    "return": -1.8872524849802261,
+    "critical_compromises": 0.105,
+    "false_isolations": 0.275,
+    "confirmed_fraction": 0.08175
+  },
+  "elapsed_seconds": 26.272375041999112,
+  "final_test_used": false
+}

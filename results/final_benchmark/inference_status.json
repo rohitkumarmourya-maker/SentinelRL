@@ -1,0 +1,10 @@
+{
+  "primary": "champion_temporal_ensemble",
+  "bootstrap_replicates": 50000,
+  "method": "crossed bootstrap; common scenario draws, independent unequal model-seed axes; Bonferroni alpha.05/K",
+  "comparators": 55,
+  "all_primary_return_familywise_lower_positive": false,
+  "all_primary_return_point_differences_positive": false,
+  "secondary_intervals_exploratory": true,
+  "include_fixed_checkpoint_comparisons": true
+}

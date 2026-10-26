@@ -1,32 +1,21 @@
-"""Standalone evaluation and plot generation script."""
-import argparse
+#!/usr/bin/env python3
+"""Re-evaluate the exact bundled policies into a fresh output directory."""
 from pathlib import Path
-import pandas as pd
-from src.experiment import evaluate, evaluate_sensitivity, evaluate_ablation, make_plots
+import argparse,subprocess,sys
+ROOT=Path(__file__).resolve().parent
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--episodes",
-        type=int,
-        default=30,
-        help="Held-out evaluation episodes per baseline (default: 30)",
-    )
-    args = parser.parse_args()
 
-    root = Path(__file__).resolve().parent
-    train_path = root / "results" / "training_episodes.csv"
-    if not train_path.exists():
-        raise SystemExit("Training log missing. Run `python train.py` or `python run_all.py` first.")
+def main():
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--execute-model-run',action='store_true')
+ p.add_argument('--output',type=Path,required=True);p.add_argument('--workers',type=int,default=2)
+ p.add_argument('--full-frozen-test',action='store_true',help='Reproduce all10,000recorded final scenarios; default is20development scenarios')
+ args=p.parse_args()
+ command=[sys.executable,str(ROOT/'benchmark.py'),'--spec',str(ROOT/'protocol/frozen_comparison.json'),
+          '--split','final' if args.full_frozen_test else 'validation','--workers',str(args.workers),'--output',str(args.output.resolve())]
+ if not args.full_frozen_test:command+=['--episodes','20']
+ print(' '.join(command),flush=True)
+ if args.execute_model_run:subprocess.run(command,cwd=ROOT,check=True)
+ else:print('Dry run. Add --execute-model-run for actual inference/evaluation.')
 
-    training = pd.read_csv(train_path)
-    evaluation = evaluate(episodes=args.episodes)
-    sensitivity = evaluate_sensitivity(episodes=20)
-    ablation = evaluate_ablation(episodes=args.episodes)
-    make_plots(training, evaluation, sensitivity, ablation)
-    print("\n=== Held-Out Benchmark Summary ===")
-    print(pd.read_csv(root / "results" / "summary.csv").to_string(index=False))
-    print("\n=== Attack-Rate Sensitivity Summary ===")
-    print(pd.read_csv(root / "results" / "sensitivity_summary.csv").to_string(index=False))
-    print("\n=== Ablation & RL Comparator Summary ===")
-    print(pd.read_csv(root / "results" / "ablation_summary.csv").to_string(index=False))
+
+if __name__=='__main__':main()
